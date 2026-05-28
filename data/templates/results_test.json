@@ -6,19 +6,28 @@
     "results": [
       {
         "title": "SSH login responsiveness",
-        "passed": true
+        "passed": true,
+        "notes": "Login under 1s, no latency spikes"
       },
       {
         "title": "Home directory accessible",
-        "passed": true
+        "passed": true,
+        "notes": "Mounted correctly with no permission issues"
       },
       {
         "title": "Slurm queue visibility",
-        "passed": true
+        "passed": true,
+        "notes": "Queue responding normally"
       },
       {
         "title": "Interactive job startup",
-        "passed": false
+        "passed": false,
+        "notes": "Job stuck in CF state for ~3 minutes"
+      },
+      {
+        "title": "Module load python",
+        "passed": true,
+        "notes": "Python 3.11 loads without errors"
       }
     ]
   },
@@ -29,19 +38,28 @@
     "results": [
       {
         "title": "Module load gcc/13.2",
-        "passed": true
+        "passed": true,
+        "notes": "Compiler environment stable"
       },
       {
         "title": "Scratch filesystem write test",
-        "passed": true
+        "passed": true,
+        "notes": "Write speed within expected range"
       },
       {
         "title": "GPU allocation request",
-        "passed": false
+        "passed": false,
+        "notes": "Allocation delayed due to queue congestion"
       },
       {
         "title": "MPI hello-world execution",
-        "passed": true
+        "passed": true,
+        "notes": "Multi-node communication successful"
+      },
+      {
+        "title": "Large file transfer",
+        "passed": true,
+        "notes": "2GB file copied without degradation"
       }
     ]
   },
@@ -52,19 +70,28 @@
     "results": [
       {
         "title": "SSH MFA authentication",
-        "passed": true
+        "passed": true,
+        "notes": "Authentication completed in ~2s"
       },
       {
         "title": "Filesystem metadata latency",
-        "passed": false
+        "passed": false,
+        "notes": "High latency when listing large directories"
       },
       {
         "title": "Job submission via sbatch",
-        "passed": true
+        "passed": true,
+        "notes": "Jobs submitted successfully"
       },
       {
         "title": "Conda environment activation",
-        "passed": true
+        "passed": true,
+        "notes": "No dependency conflicts"
+      },
+      {
+        "title": "Module spider search",
+        "passed": true,
+        "notes": "Modules indexed correctly"
       }
     ]
   },
@@ -75,157 +102,60 @@
     "results": [
       {
         "title": "Interactive shell responsiveness",
-        "passed": true
+        "passed": true,
+        "notes": "Shell prompt latency normal"
       },
       {
         "title": "Shared filesystem mount",
-        "passed": true
+        "passed": true,
+        "notes": "All nodes mounted correctly"
       },
       {
         "title": "Large file copy test",
-        "passed": true
+        "passed": true,
+        "notes": "No throttling observed"
       },
       {
         "title": "Scheduler command latency",
-        "passed": false
+        "passed": false,
+        "notes": "squeue response delayed under load"
+      },
+      {
+        "title": "Environment module unload",
+        "passed": true,
+        "notes": "Clean unload of gcc module"
       }
     ]
   },
   {
-    "start-time": "2026-05-28T12:11:09Z",
-    "end-time": "2026-05-28T12:39:40Z",
+    "start-time": "2026-06-28T12:11:09Z",
+    "end-time": "2026-06-28T12:39:40Z",
     "tester": "emma.wilson",
     "results": [
       {
         "title": "Python virtualenv creation",
-        "passed": true
+        "passed": true,
+        "notes": "Environment created successfully"
       },
       {
         "title": "Container runtime execution",
-        "passed": true
+        "passed": true,
+        "notes": "Apptainer container ran without errors"
       },
       {
         "title": "GPU visibility via nvidia-smi",
-        "passed": true
+        "passed": true,
+        "notes": "All GPUs detected correctly"
       },
       {
         "title": "Job cancellation workflow",
-        "passed": true
-      }
-    ]
-  },
-  {
-    "start-time": "2026-06-28T13:05:17Z",
-    "end-time": "2026-06-28T13:28:11Z",
-    "tester": "frank.miller",
-    "results": [
-      {
-        "title": "SSH connection stability",
-        "passed": false
+        "passed": true,
+        "notes": "Jobs cancelled instantly"
       },
       {
-        "title": "Login node CPU responsiveness",
-        "passed": true
-      },
-      {
-        "title": "Module spider command",
-        "passed": true
-      },
-      {
-        "title": "Filesystem quota visibility",
-        "passed": true
-      }
-    ]
-  },
-  {
-    "start-time": "2026-07-28T14:16:33Z",
-    "end-time": "2026-07-28T14:52:01Z",
-    "tester": "grace.thomas",
-    "results": [
-      {
-        "title": "Jupyter notebook startup",
-        "passed": true
-      },
-      {
-        "title": "Interactive GPU session",
-        "passed": false
-      },
-      {
-        "title": "Slurm accounting query",
-        "passed": true
-      },
-      {
-        "title": "Environment module unload",
-        "passed": true
-      }
-    ]
-  },
-  {
-    "start-time": "2026-08-28T15:00:00Z",
-    "end-time": "2026-08-28T15:31:19Z",
-    "tester": "harry.clark",
-    "results": [
-      {
-        "title": "Small CPU benchmark",
-        "passed": true
-      },
-      {
-        "title": "Network filesystem latency",
-        "passed": false
-      },
-      {
-        "title": "Scheduler node availability",
-        "passed": true
-      },
-      {
-        "title": "Temporary directory cleanup",
-        "passed": true
-      }
-    ]
-  },
-  {
-    "start-time": "2026-09-28T16:08:42Z",
-    "end-time": "2026-09-28T16:36:55Z",
-    "tester": "isla.roberts",
-    "results": [
-      {
-        "title": "Apptainer container execution",
-        "passed": true
-      },
-      {
-        "title": "Parallel filesystem throughput",
-        "passed": true
-      },
-      {
-        "title": "MPI multi-node communication",
-        "passed": false
-      },
-      {
-        "title": "Queue wait time estimation",
-        "passed": true
-      }
-    ]
-  },
-  {
-    "start-time": "2026-10-28T17:11:29Z",
-    "end-time": "2026-10-28T17:47:02Z",
-    "tester": "jack.walker",
-    "results": [
-      {
-        "title": "SSH reconnect after disconnect",
-        "passed": true
-      },
-      {
-        "title": "GPU job scheduling",
-        "passed": true
-      },
-      {
-        "title": "Cluster documentation access",
-        "passed": true
-      },
-      {
-        "title": "Home filesystem performance",
-        "passed": false
+        "title": "Notebook startup",
+        "passed": true,
+        "notes": "Jupyter launched in <5 seconds"
       }
     ]
   }
