@@ -59,10 +59,11 @@ module Daily
         notes = prompt.yes?('Do you have any notes?', default: false)
 
         if notes
-          test['notes'] = prompt.multiline('Enter your notes here:') do |q|
+          input = prompt.multiline('Enter your notes here:') do |q|
             q.required true
             q.modify :strip
           end
+          test['notes'] = input.join('')
         end
 
         results['results'].push(test)
