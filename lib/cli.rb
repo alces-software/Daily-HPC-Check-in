@@ -4,6 +4,7 @@ require 'bundler/setup'
 require 'dry/cli'
 
 require_relative '../lib/start'
+require_relative '../lib/scheduler'
 
 module Daily
   module CLI
@@ -29,7 +30,8 @@ module Daily
         desc ''
 
         def call(*)
-          puts ''
+          scheduler = Daily::Scheduler.new
+          puts scheduler.person
         end
       end
 
