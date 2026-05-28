@@ -7,3 +7,5 @@ source 'https://rubygems.org'
 gem 'dry-cli', '~> 1.4'
 
 gem 'tty-prompt', '~> 0.23.1'
+
+gem 'rubocop', '~> 1.86'
