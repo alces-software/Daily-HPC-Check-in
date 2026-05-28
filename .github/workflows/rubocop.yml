@@ -2,9 +2,6 @@ name: RuboCop
 
 on:
   push:
-    branches:
-      - main
-      - master
   pull_request:
 
 jobs:
@@ -18,7 +15,11 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
+          ruby-version: ruby
           bundler-cache: true
 
+      - name: Install dependencies
+        run: bundle install
+
       - name: Run RuboCop
-        run: bundle exec ruboco
+        run: bundle exec rubocop
