@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 module Daily
+  # Scheduler is responsible for loading the daily check-in roster from
+  # data/schedule.json, choosing a random person whose completed state is
+  # false, and updating the schedule to reflect the selected person and
+  # today's date. If all people have been completed, it resets the
+  # completed flags and retries selection.
   class Scheduler
     attr_reader :person
 
