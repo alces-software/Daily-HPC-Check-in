@@ -7,7 +7,6 @@ require_relative '../lib/start'
 
 module Daily
   module CLI
-    module Commands
       extend Dry::CLI::Registry
 
       class Version < Dry::CLI::Command
@@ -42,12 +41,10 @@ module Daily
         end
       end
 
-      register 'version',    Version, aliases: ['v', '-v', '--version']
-      register 'start',      Start
-      register 'who',        Who
-      register 'results',    Results
-    end
+    register 'version',    Version, aliases: ['v', '-v', '--version']
+    register 'start',      Start
+    register 'who',        Who
+    register 'results',    Results
   end
 end
 
-Dry::CLI.new(Daily::CLI::Commands).call
