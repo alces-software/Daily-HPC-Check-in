@@ -4,10 +4,10 @@ require 'bundler/setup'
 require 'dry/cli'
 
 require_relative '../lib/start'
+require_relative '../lib/scheduler'
 
 module Daily
   module CLI
-    module Commands
       extend Dry::CLI::Registry
 
       class Version < Dry::CLI::Command
@@ -30,7 +30,8 @@ module Daily
         desc ''
 
         def call(*)
-          puts ''
+          scheduler = Daily::Scheduler.new
+          puts scheduler.person
         end
       end
 
@@ -42,12 +43,10 @@ module Daily
         end
       end
 
-      register 'version',    Version, aliases: ['v', '-v', '--version']
-      register 'start',      Start
-      register 'who',        Who
-      register 'results',    Results
-    end
+    register 'version',    Version, aliases: ['v', '-v', '--version']
+    register 'start',      Start
+    register 'who',        Who
+    register 'results',    Results
   end
 end
 
-Dry::CLI.new(Daily::CLI::Commands).call
