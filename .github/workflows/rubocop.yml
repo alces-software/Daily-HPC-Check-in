@@ -1,4 +1,4 @@
-name: RuboCop
+name: RuboCop Auto Fix
 
 on:
   push:
@@ -7,6 +7,10 @@ on:
 jobs:
   rubocop:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout code
@@ -21,5 +25,15 @@ jobs:
       - name: Install dependencies
         run: bundle install
 
-      - name: Run RuboCop
+      - name: Run RuboCop auto-correct
         run: bundle exec rubocop -A
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "style: auto-fix RuboCop offenses"
+          title: "Auto-fix RuboCop offenses"
+          body: |
+            This PR contains automatic RuboCop fixes.
+          branch: rubocop-auto-fixes
+          delete-branch: true
