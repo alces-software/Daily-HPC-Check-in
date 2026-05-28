@@ -12,6 +12,8 @@ GEM
       racc
     pastel (0.8.0)
       tty-color (~> 0.5)
+    terminal-table (4.0.0)
+      unicode-display_width (>= 1.1.1, < 4)
     prism (1.9.0)
     racc (1.8.1)
     rainbow (3.1.1)
@@ -52,6 +54,8 @@ PLATFORMS
 
 DEPENDENCIES
   dry-cli (~> 1.4)
+  pastel (~> 0.8.0)
+  terminal-table (~> 4.0)
   rubocop (~> 1.86)
   tty-prompt (~> 0.23.1)
 
@@ -64,6 +68,7 @@ CHECKSUMS
   parallel (2.1.0) sha256=b35258865c2e31134c5ecb708beaaf6772adf9d5efae28e93e99260877b09356
   parser (3.3.11.1) sha256=d17ace7aabe3e72c3cc94043714be27cc6f852f104d81aa284c2281aecc65d54
   pastel (0.8.0) sha256=481da9fb7d2f6e6b1a08faf11fa10363172dc40fd47848f096ae21209f805a75
+  terminal-table (4.0.0) sha256=f504793203f8251b2ea7c7068333053f0beeea26093ec9962e62ea79f94301d2
   prism (1.9.0) sha256=7b530c6a9f92c24300014919c9dcbc055bf4cdf51ec30aed099b06cd6674ef85
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a

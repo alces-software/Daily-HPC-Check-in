@@ -5,6 +5,7 @@ require 'dry/cli'
 
 require_relative '../lib/start'
 require_relative '../lib/scheduler'
+require_relative '../lib/results'
 
 module Daily
   module CLI
@@ -46,11 +47,14 @@ module Daily
       end
     end
 
-    class Results < Dry::CLI::Command
-      desc ''
+      class Results < Dry::CLI::Command
+        desc 'Displays test details and results'
 
-      def call(*)
-        puts ''
+        argument :date, required: false, desc: 'Filter results by date (YYYY-MM-DD)'
+
+        def call(date: nil, **)
+          Daily::Results.new.call(date: date)
+        end
       end
     end
 
