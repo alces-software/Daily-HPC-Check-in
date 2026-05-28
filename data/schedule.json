@@ -10,11 +10,11 @@
     },
     {
       "name": "Calum",
-      "completed": false
+      "completed": true
     }
   ],
   "today": {
     "date": "28-05-2026",
-    "name": "Oscar"
+    "name": "Calum"
   }
 }
