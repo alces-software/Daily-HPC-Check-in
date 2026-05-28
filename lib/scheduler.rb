@@ -36,10 +36,24 @@ module Daily
 
       path = schedule_path
       unless File.exist?(path)
-        raise "Schedule file not found: #{path}"
+        generate_new_schedule
       end
 
       @schedule = JSON.parse(File.read(path))
+    end
+
+    def generate_new_schedule
+      require 'json'
+      require 'date'
+      template_path = File.expand_path('../data/templates/schedule.json', __dir__)
+      config_path = File.expand_path('../data/config.json', __dir__)
+
+      template = JSON.parse(File.read(template_path))
+      config = JSON.parse(File.read(config_path))
+
+      @schedule = template
+      @schedule['people'] = config['people'].map { |name| { 'name' => name, 'completed' => false } }
+      save_schedule
     end
 
     def generated_today
