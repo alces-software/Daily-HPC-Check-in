@@ -2,6 +2,8 @@
 
 require 'bundler/setup'
 require 'dry/cli'
+require "json"
+require "time"
 
 require_relative '../lib/start'
 
@@ -35,10 +37,54 @@ module Daily
       end
 
       class Results < Dry::CLI::Command
-        desc ''
+        desc 'Displays results of HPC system health check'
 
-        def call(*)
-          puts ''
+        argument :date, required: false, desc: 'Filter results by date (YYYY-MM-DD)'
+
+        def call(date: nil, **)
+
+          
+          puts 'Results:'
+
+          file_path = File.expand_path('../data/templates/results_test.json', __dir__)
+          data = JSON.parse(File.read(file_path))
+
+          date ||= Time.now.utc.to_date.to_s
+
+          entry = false
+        
+          
+          data.each do |run|
+
+            run_date = Time.iso8601(run['start-time']).utc.to_date.to_s
+            next if run_date != date
+
+            start_time = Time.iso8601(run['start-time'])
+            end_time   = Time.iso8601(run['end-time'])
+
+            diff = end_time - start_time
+
+            hours   = (diff / 3600).to_i
+            minutes = (diff % 3600) / 60
+            seconds = diff % 60
+
+            entry = true
+
+            
+            puts "======================================"
+            puts "Tester: #{run['tester']}"
+            puts "Date: #{Time.parse(run["start-time"]).utc.to_date}"
+            puts "Start:  #{start_time.utc.strftime("%H:%M:%S")}"
+            puts "End:    #{end_time.utc.strftime("%H:%M:%S")}"
+            puts "Duration: #{format('%02d:%02d:%02d', hours, minutes, seconds)}"
+
+            run['results'].each do |result|
+              status = result['passed'] ? "PASS" : "FAIL"
+              puts "#{status} - #{result['title']}"
+            end
+            puts "\n"
+          end
+          puts "System check pending." unless entry
         end
       end
 
