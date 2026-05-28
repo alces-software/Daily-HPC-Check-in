@@ -1,0 +1,38 @@
+name: RuboCop Auto Fix
+
+on:
+  push:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  rubocop:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ruby
+          bundler-cache: true
+
+      - name: Install gems
+        run: bundle install
+
+      - name: Run RuboCop
+        run: bundle exec rubocop -A || true
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "style: rubocop auto fixes"
+          title: "RuboCop Auto Fixes"
+          body: |
+            Automated RuboCop fixes.
+          branch: rubocop-auto-fixes
+          delete-branch: true
