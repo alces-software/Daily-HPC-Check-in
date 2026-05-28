@@ -33,6 +33,18 @@ module Daily
           scheduler = Daily::Scheduler.new
           puts scheduler.person
         end
+
+        class New < Dry::CLI::Command
+          desc 'Picks a new person for today'
+
+          def call(*)
+            puts 'Picking new person...'
+            scheduler = Daily::Scheduler.new
+            scheduler.generate_new_person
+            puts scheduler.person
+          end
+
+        end
       end
 
       class Results < Dry::CLI::Command
@@ -46,6 +58,7 @@ module Daily
     register 'version',    Version, aliases: ['v', '-v', '--version']
     register 'start',      Start
     register 'who',        Who
+    register 'who new',    Who::New
     register 'results',    Results
   end
 end

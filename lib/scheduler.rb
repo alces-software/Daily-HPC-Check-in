@@ -5,6 +5,14 @@ module Daily
       loadschedule
 
       if !generated_today
+        pick_new
+      else
+        @person = @schedule['today']['name']
+      end
+
+    end
+
+    def pick_new
         tmp_person = pick_person
         if tmp_person.nil?
           reset_people_completion
@@ -12,11 +20,14 @@ module Daily
         else
           @person = tmp_person
         end
-      else
-        @person = @schedule['today']['name']
-      end
+        save_schedule
+    end
 
-      save_schedule
+    def generate_new_person
+      tmp_person = @person
+      while tmp_person == @person
+        pick_new
+      end
     end
 
     def loadschedule
@@ -52,6 +63,7 @@ module Daily
       name = selected.fetch('name', nil)
       today_str = Date.today.strftime('%d-%m-%Y')
 
+      @schedule['people'][people.index(selected)]['completed'] = true
       @schedule['today']['name'] = name
       @schedule['today']['date'] = today_str
 
