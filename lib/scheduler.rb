@@ -1,0 +1,83 @@
+module Daily
+  class Scheduler
+    attr_reader :person
+    def initialize
+      loadschedule
+
+      if !generated_today
+        tmp_person = pick_person
+        if tmp_person.nil?
+          reset_people_completion
+          @person = pick_person
+        else
+          @person = tmp_person
+        end
+      else
+        @person = @schedule['today']['name']
+      end
+
+      save_schedule
+    end
+
+    def loadschedule
+      require 'json'
+      require 'date'
+
+      path = schedule_path
+      unless File.exist?(path)
+        raise "Schedule file not found: #{path}"
+      end
+
+      @schedule = JSON.parse(File.read(path))
+    end
+
+    def generated_today
+      today_str = Date.today.strftime('%d-%m-%Y')
+      if @schedule.is_a?(Hash) && @schedule['today'].is_a?(Hash) && @schedule['today']['date']
+        return (@schedule['today']['date'] == today_str)
+      end
+    end
+
+    def pick_person
+      people = @schedule['people']
+      return nil unless people.is_a?(Array)
+
+      incomplete = people.select do |person|
+        person.is_a?(Hash) && person['completed'] == false
+      end
+
+      selected = incomplete.sample
+      return nil unless selected
+
+      name = selected.fetch('name', nil)
+      today_str = Date.today.strftime('%d-%m-%Y')
+
+      @schedule['today']['name'] = name
+      @schedule['today']['date'] = today_str
+
+      name
+    end
+
+    def reset_people_completion
+      people = @schedule['people']
+      return unless people.is_a?(Array)
+
+      people.each do |person|
+        next unless person.is_a?(Hash)
+        person['completed'] = false
+      end
+
+      @schedule['people'] = people
+    end
+
+    def save_schedule
+      require 'json'
+
+      File.write(schedule_path, JSON.pretty_generate(@schedule))
+    end
+
+    def schedule_path
+      File.expand_path('../data/schedule.json', __dir__)
+    end
+  end
+end
