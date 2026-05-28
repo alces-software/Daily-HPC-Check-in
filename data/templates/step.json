@@ -4,14 +4,5 @@
    "priority": 0,
    "goal": "",
    "estimated-time": "",
-   "procedures": [
-      {
-         "necessary": false,
-         "text": "",
-         "outcomes": {
-            "good": "",
-            "bad": ""
-         }
-      }
-   ]
+   "procedures": []
 }
