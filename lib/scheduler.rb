@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 module Daily
   class Scheduler
     attr_reader :person
+
     def initialize
       loadschedule
 
@@ -9,25 +12,22 @@ module Daily
       else
         @person = @schedule['today']['name']
       end
-
     end
 
     def pick_new
-        tmp_person = pick_person
-        if tmp_person.nil?
-          reset_people_completion
-          @person = pick_person
-        else
-          @person = tmp_person
-        end
-        save_schedule
+      tmp_person = pick_person
+      if tmp_person.nil?
+        reset_people_completion
+        @person = pick_person
+      else
+        @person = tmp_person
+      end
+      save_schedule
     end
 
     def generate_new_person
       tmp_person = @person
-      while tmp_person == @person
-        pick_new
-      end
+      pick_new while tmp_person == @person
     end
 
     def loadschedule
@@ -35,9 +35,7 @@ module Daily
       require 'date'
 
       path = schedule_path
-      unless File.exist?(path)
-        generate_new_schedule
-      end
+      generate_new_schedule unless File.exist?(path)
 
       @schedule = JSON.parse(File.read(path))
     end
@@ -58,9 +56,9 @@ module Daily
 
     def generated_today
       today_str = Date.today.strftime('%d-%m-%Y')
-      if @schedule.is_a?(Hash) && @schedule['today'].is_a?(Hash) && @schedule['today']['date']
-        return (@schedule['today']['date'] == today_str)
-      end
+      return unless @schedule.is_a?(Hash) && @schedule['today'].is_a?(Hash) && @schedule['today']['date']
+
+      @schedule['today']['date'] == today_str
     end
 
     def pick_person
@@ -90,6 +88,7 @@ module Daily
 
       people.each do |person|
         next unless person.is_a?(Hash)
+
         person['completed'] = false
       end
 
