@@ -27,7 +27,7 @@ module Daily
       end
 
       class Who < Dry::CLI::Command
-        desc ''
+        desc 'Outputs the name of the person responsible for HPC check-in today'
 
         def call(*)
           scheduler = Daily::Scheduler.new
