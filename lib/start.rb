@@ -22,8 +22,6 @@ module Daily
       sleep(50)
       results['end-time'] = Time.new.utc
 
-      File.write()
-
       puts steps_data
     end
   end
