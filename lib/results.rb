@@ -2,74 +2,66 @@
 
 require 'bundler/setup'
 require 'dry/cli'
-require "json"
-require "time"
+require 'json'
+require 'time'
 
 require_relative '../lib/start'
 
-require "pastel"
-require "terminal-table"
+require 'pastel'
+require 'terminal-table'
 
 module Daily
-  class Results 
-        
+  class Results
+    def call(date: nil)
+      file_path = File.expand_path('../data/templates/results_test.json', __dir__)
+      data = JSON.parse(File.read(file_path))
+      pastel = Pastel.new
 
-        def call(date: nil)
+      date ||= Time.now.utc.to_date.to_s
 
-        
+      entry = false
 
-          file_path = File.expand_path('../data/templates/results_test.json', __dir__)
-          data = JSON.parse(File.read(file_path))
-          pastel = Pastel.new
+      data.each do |run|
+        run_date = Time.iso8601(run['start-time']).utc.to_date.to_s
+        next if run_date != date
 
-          date ||= Time.now.utc.to_date.to_s
+        start_time = Time.iso8601(run['start-time'])
+        end_time   = Time.iso8601(run['end-time'])
 
-          entry = false
-        
-          
-          data.each do |run|
+        diff = end_time - start_time
 
-            run_date = Time.iso8601(run['start-time']).utc.to_date.to_s
-            next if run_date != date
+        hours   = (diff / 3600).to_i
+        minutes = (diff % 3600) / 60
+        seconds = diff % 60
 
-            start_time = Time.iso8601(run['start-time'])
-            end_time   = Time.iso8601(run['end-time'])
+        entry = true
 
-            diff = end_time - start_time
+        rows = []
+        rows << ['Tester', run['tester']]
+        rows << ['Date', Time.parse(run['start-time']).utc.to_date]
+        rows << ['Start', start_time.utc.strftime('%H:%M:%S')]
+        rows << ['End', end_time.utc.strftime('%H:%M:%S')]
+        rows << ['Duration', format('%02d:%02d:%02d', hours, minutes, seconds)]
 
-            hours   = (diff / 3600).to_i
-            minutes = (diff % 3600) / 60
-            seconds = diff % 60
+        details_table = Terminal::Table.new title: 'Test details', rows: rows
 
-            entry = true
+        puts details_table
 
-            rows = []
-            rows << ["Tester", run['tester']]
-            rows << ["Date", Time.parse(run["start-time"]).utc.to_date]
-            rows << ["Start", start_time.utc.strftime("%H:%M:%S")]
-            rows << ["End", end_time.utc.strftime("%H:%M:%S")]
-            rows << ["Duration", format('%02d:%02d:%02d', hours, minutes, seconds)]
+        tasks = []
 
-            details_table = Terminal::Table.new :title => "Test details", :rows => rows
-
-            puts details_table
-
-            tasks = []
-
-            run['results'].each do |result|
-              status = result['passed'] ? "PASS" : "FAIL"
-              if status == "PASS"
-                tasks << [pastel.green(status), pastel.green(result['title']), result['notes']]
-              else
-                tasks << [pastel.bold.red(status), pastel.bold.red(result['title']), result['notes']]
-              end
-            end
-            results_table = Terminal::Table.new :title => "Results for #{date}", :headings => ['Outcome', 'Task', 'Notes'], :rows => tasks
-            puts results_table
-          end
-          puts "Today's system check pending..." unless entry
+        run['results'].each do |result|
+          status = result['passed'] ? 'PASS' : 'FAIL'
+          tasks << if status == 'PASS'
+                     [pastel.green(status), pastel.green(result['title']), result['notes']]
+                   else
+                     [pastel.bold.red(status), pastel.bold.red(result['title']), result['notes']]
+                   end
         end
+        results_table = Terminal::Table.new title: "Results for #{date}",
+                                            headings: %w[Outcome Task Notes], rows: tasks
+        puts results_table
       end
+      puts "Today's system check pending..." unless entry
     end
-  
-
+  end
+end
