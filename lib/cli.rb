@@ -53,7 +53,7 @@ module Daily
         argument :date, required: false, desc: 'Filter results by date (YYYY-MM-DD)'
 
         def call(date: nil, **)
-          Daily::Results.new.call(date: date)
+          Daily::Results.new(date: date)
         end
       end
     end

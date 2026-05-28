@@ -11,29 +11,57 @@ require "pastel"
 require "terminal-table"
 
 module Daily
-  class Results 
+  class Results
+    def initialize(date: nil)
+      @date = (date || Date.today.strftime('%d-%m-%Y'))
+      if Dir.exist?(File.expand_path('data/results'))
         
+        @base_path = File.expand_path("../data/results", __dir__)
+        run
+      else 
+        puts "No data to display. Perform checks to display results."
+      end
 
-        def call(date: nil)
 
-        
+      
+    end
 
-          file_path = File.expand_path('../data/templates/results_test.json', __dir__)
-          data = JSON.parse(File.read(file_path))
-          pastel = Pastel.new
+    def run
+      today = Time.now.utc.to_date
+      parsed_date = Date.strptime(@date, '%d-%m-%Y') rescue nil
 
-          date ||= Time.now.utc.to_date.to_s
+      unless parsed_date
+        puts "Enter a valid date (DD-MM-YYYY)"
+        return
+      end
 
-          entry = false
-        
+      if parsed_date > Date.today
+        puts "Invalid: cannot enter a future date"
+        return
+      end
+
+      file_path = File.join(@base_path, @date, "results.json")
+
+      unless File.exist?(file_path)
+        if parsed_date == today
+          puts "Today's system check pending..."
+        else
+          puts "No entry found for #{@date}"
+        end
+        return
+      end
+
+        def load_data(file_path)
           
-          data.each do |run|
+           file_path = File.expand_path("../data/results/#{@date}/results.json", __dir__)
+           @data = JSON.parse(File.read(file_path))
+        end
 
-            run_date = Time.iso8601(run['start-time']).utc.to_date.to_s
-            next if run_date != date
+        def render_results
 
-            start_time = Time.iso8601(run['start-time'])
-            end_time   = Time.iso8601(run['end-time'])
+          start_time = Time.parse(@data['start-time'])
+          end_time   = Time.parse(@data['end-time'])
+          
 
             diff = end_time - start_time
 
@@ -41,11 +69,11 @@ module Daily
             minutes = (diff % 3600) / 60
             seconds = diff % 60
 
-            entry = true
+            pastel = Pastel.new
 
             rows = []
-            rows << ["Tester", run['tester']]
-            rows << ["Date", Time.parse(run["start-time"]).utc.to_date]
+            rows << ["Tester", @data['tester']]
+            rows << ["Date", @date]
             rows << ["Start", start_time.utc.strftime("%H:%M:%S")]
             rows << ["End", end_time.utc.strftime("%H:%M:%S")]
             rows << ["Duration", format('%02d:%02d:%02d', hours, minutes, seconds)]
@@ -56,7 +84,7 @@ module Daily
 
             tasks = []
 
-            run['results'].each do |result|
+            @data['results'].each do |result|
               status = result['passed'] ? "PASS" : "FAIL"
               if status == "PASS"
                 tasks << [pastel.green(status), pastel.green(result['title']), result['notes']]
@@ -64,12 +92,14 @@ module Daily
                 tasks << [pastel.bold.red(status), pastel.bold.red(result['title']), result['notes']]
               end
             end
-            results_table = Terminal::Table.new :title => "Results for #{date}", :headings => ['Outcome', 'Task', 'Notes'], :rows => tasks
+            results_table = Terminal::Table.new :title => "Results for #{@date}", :headings => ['Outcome', 'Task', 'Notes'], :rows => tasks
             puts results_table
-          end
-          puts "Today's system check pending..." unless entry
+          
         end
-      end
-    end
-  
+      
 
+      load_data(file_path)
+      render_results
+    end
+  end
+end
