@@ -1,7 +1,11 @@
+# frozen_string_literal: true
+
 require 'bundler/setup'
 require 'dry/cli'
 
-module Foo
+require_relative '../lib/start'
+
+module Daily
   module CLI
     module Commands
       extend Dry::CLI::Registry
@@ -18,7 +22,7 @@ module Foo
         desc 'Starts daily wizard'
 
         def call(*)
-          puts 'started'
+          Daily::Start.new
         end
       end
 
@@ -30,7 +34,7 @@ module Foo
         end
       end
 
-      class Results <Dry::CLI::Command
+      class Results < Dry::CLI::Command
         desc ''
 
         def call(*)
@@ -46,4 +50,4 @@ module Foo
   end
 end
 
-Dry::CLI.new(Foo::CLI::Commands).call
+Dry::CLI.new(Daily::CLI::Commands).call
