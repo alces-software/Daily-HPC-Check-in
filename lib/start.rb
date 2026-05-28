@@ -56,6 +56,15 @@ module Daily
 
         test['passed'] = prompt.yes?('Did this test pass?')
 
+        notes = prompt.yes?('Do you have any notes?', default: false)
+
+        if notes
+          test['notes'] = prompt.multiline('Enter your notes here:') do |q|
+            q.required true
+            q.modify :strip
+          end
+        end
+
         results['results'].push(test)
       end
 

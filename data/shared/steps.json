@@ -8,7 +8,7 @@
       "procedures": [
          {
             "necessary": true,
-            "text": "SSH to login1.cognition.gla.alces.network and verify normal prompt",
+            "text": "  SSH to login1.cognition.gla.alces.network and verify normal prompt",
             "outcomes": {
                "good": "You log in successfully",
                "bad": "Login fails or times out"
@@ -25,7 +25,7 @@
       "procedures": [
          {
             "necessary": true,
-            "text": "1. Run: quota\n2. Run: df -h ~\n3. Quick block + metadata test:\ntime dd if=/dev/zero of=~/fs-test-file bs=1M count=50 conv=fdatasync && rm -f ~/fs-test-file\ntime mkdir -p ~/fs-test-meta && for i in {1..100}; do touch ~/fs-test-meta/file$i; done && rm -rf ~/fs-test-meta",
+            "text": "  1. Run: quota\n  2. Run: df -h ~\n  3. Quick block + metadata test:\n    time dd if=/dev/zero of=~/fs-test-file bs=1M count=50 conv=fdatasync && rm -f ~/fs-test-file\n    time mkdir -p ~/fs-test-meta && for i in {1..100}; do touch ~/fs-test-meta/file$i; done && rm -rf ~/fs-test-meta",
             "outcomes": {
                "good": "You log in successfully",
                "bad": "Login fails or times out"
@@ -42,7 +42,7 @@
       "procedures": [
          {
             "necessary": true,
-            "text": "1. Run: lfs quota /mnt/scratch/\n2. Run: ls /mnt/scratch/$USER\n3. Quick test:\ntime dd if=/dev/zero of=/mnt/scratch/$USER/fs-test-file bs=1M count=50 conv=fdatasync && rm -f /mnt/scratch/$USER/fs-test-file\ntime mkdir -p /mnt/scratch/$USER/fs-test-meta && for i in {1..100}; do touch /mnt/scratch/$USER/fs-test-meta/file$i; done && rm -rf /mnt/scratch/$USER/fs-test-meta",
+            "text": "  1. Run: lfs quota /mnt/scratch/\n  2. Run: ls /mnt/scratch/$USER\n  3. Quick test:\n    time dd if=/dev/zero of=/mnt/scratch/$USER/fs-test-file bs=1M count=50 conv=fdatasync && rm -f /mnt/scratch/$USER/fs-test-file\n    time mkdir -p /mnt/scratch/$USER/fs-test-meta && for i in {1..100}; do touch /mnt/scratch/$USER/fs-test-meta/file$i; done && rm -rf /mnt/scratch/$USER/fs-test-meta",
             "outcomes": {
                "good": "Commands succeed, good performance, no errors",
                "bad": "Filesystem issues or very slow performance"
@@ -59,7 +59,7 @@
       "procedures": [
          {
             "necessary": true,
-            "text": "Run: sinfo -Nl   (or simply sinfo)",
+            "text": "  Run: sinfo -Nl   (or simply sinfo)",
             "outcomes": {
                "good": "Nodes in \"idle/mixed/allocated\" states. gpu-l40s and gpu-h100 visible",
                "bad": "Many nodes down/drained or scheduler unresponsive"
@@ -76,9 +76,9 @@
       "procedures": [
          {
             "necessary": true,
-            "text": "Run: sinfo -Nl",
+            "text": "  Run: sinfo -Nl",
             "outcomes": {
-               "good": "node01–node16 mostly idle/mixed/allocated",
+               "good": "node01-node16 mostly idle/mixed/allocated",
                "bad": "Large number of nodes missing or in bad states"
             }
          }
@@ -93,7 +93,7 @@
       "procedures": [
          {
             "necessary": true,
-            "text": "1. CPU test: srun --time=00:01:00 --nodes=1 --ntasks=1 echo \"Test job OK on $(hostname)\"\n2. Monitor: squeue -u $USER",
+            "text": "  1. CPU test: srun --time=00:01:00 --nodes=1 --ntasks=1 echo \"Test job OK on $(hostname)\"\n  2. Monitor: squeue -u $USER",
             "outcomes": {
                "good": "Job runs and completes successfully",
                "bad": "Job fails to run or stays pending"
@@ -110,7 +110,7 @@
       "procedures": [
          {
             "necessary": true,
-            "text": "1. module avail   (or which srun)\n2. squeue",
+            "text": "  1. module avail   (or which srun)\n  2. squeue",
             "outcomes": {
                "good": "Commands run normally",
                "bad": "Slurm commands fail or environment broken"
@@ -127,7 +127,7 @@
       "procedures": [
          {
             "necessary": true,
-            "text": "1. squeue -u $USER\n2. Check and remove any leftover test files in ~ and /mnt/scratch/$USER\n3. Run: quota",
+            "text": "  1. squeue -u $USER\n  2. Check and remove any leftover test files in ~ and /mnt/scratch/$USER\n  3. Run: quota",
             "outcomes": {
                "good": "No running jobs, no temp files, quota back to normal",
                "bad": "Leftover jobs or files"
