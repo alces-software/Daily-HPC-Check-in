@@ -3,6 +3,7 @@
 require 'json'
 require 'date'
 require 'tty-prompt'
+require_relative 'scheduler'
 
 module Daily
   class Start
@@ -32,6 +33,7 @@ module Daily
 
       steps = self.class.instance_variable_get(:@step_data)
       results = self.class.instance_variable_get(:@results)
+      results['tester'] = Daily::Scheduler.new.person
       results['start-time'] = Time.new.utc
       test_template = self.class.instance_variable_get(:@test_template)
       prompt = TTY::Prompt.new
@@ -52,8 +54,15 @@ module Daily
         puts "Red:     #{step['procedures'][0]['outcomes']['bad']}"
         puts
 
-        test['passed'] = prompt.yes?('Did this test pass?') do |q|
-          q.required true
+        test['passed'] = prompt.yes?('Did this test pass?')
+
+        notes = prompt.yes?('Do you have any notes?', default: false)
+
+        if notes
+          test['notes'] = prompt.multiline('Enter your notes here:') do |q|
+            q.required true
+            q.modify :strip
+          end
         end
 
         results['results'].push(test)
@@ -64,13 +73,11 @@ module Daily
       puts '-------------------------------------------------------------------------------'
       puts 'Title: Final Notes / Escalation'
       puts '-------------------------------------------------------------------------------'
-      puts 'Green day → Log: "Daily user check complete – no issues"'
+      puts 'Green day → Log: "Daily user check complete - no issues"'
       puts 'Any RED item → Report immediately to OPS with exact command output'
       puts
 
-      prompt.yes?('Are you finished?') do |q|
-        q.required true
-      end
+      prompt.yes?('Are you finished?')
 
       results['end-time'] = Time.new.utc
 
