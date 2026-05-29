@@ -1,199 +1,52 @@
 [
-<<<<<<< HEAD
-   {
-      "id": "login",
-      "title": "Login & Basic Access",
-      "priority": 0,
-      "goal": "Confirm you can reach the login node",
-      "estimated-time": "2-3 min",
-      "procedures": {
-         "cognition": [
-            {
-               "necessary": true,
-               "text": "  SSH to login1.cognition.gla.alces.network and verify normal prompt",
-               "outcomes": {
-                  "good": "You log in successfully",
-                  "bad": "Login fails or times out"
-               }
-            },
-            {
-               "necessary": false,
-               "text": "  This is another way1",
-               "outcomes": {
-                  "good": "yes",
-                  "bad": "no"
-               }
-            }
-         ]
-      }
-   },
-   {
-      "id": "home-directory",
-      "title": "Home Directory & User Quota + Filesystem Experience",
-      "priority": 0,
-      "goal": "Confirm you can reach the login node",
-      "estimated-time": "6-7 min",
-      "procedures": {
-         "cognition": [
-            {
-               "necessary": true,
-               "text": "  1. Run: quota\n  2. Run: df -h ~\n  3. Quick block + metadata test:\n    time dd if=/dev/zero of=~/fs-test-file bs=1M count=50 conv=fdatasync && rm -f ~/fs-test-file\n    time mkdir -p ~/fs-test-meta && for i in {1..100}; do touch ~/fs-test-meta/file$i; done && rm -rf ~/fs-test-meta",
-               "outcomes": {
-                  "good": "You log in successfully",
-                  "bad": "Login fails or times out"
-               }
-            }
-         ]
-      }
-   },
-   {
-      "id": "scratch",
-      "title": "Scratch / Lustre Storage + Filesystem Experience",
-      "priority": 0,
-      "goal": "Verify Lustre scratch and test real filesystem experience in personal dir",
-      "estimated-time": "5-6 min",
-      "procedures": {
-         "cognition": [
-            {
-               "necessary": true,
-               "text": "  1. Run: lfs quota /mnt/scratch/\n  2. Run: ls /mnt/scratch/$USER\n  3. Quick test:\n    time dd if=/dev/zero of=/mnt/scratch/$USER/fs-test-file bs=1M count=50 conv=fdatasync && rm -f /mnt/scratch/$USER/fs-test-file\n    time mkdir -p /mnt/scratch/$USER/fs-test-meta && for i in {1..100}; do touch /mnt/scratch/$USER/fs-test-meta/file$i; done && rm -rf /mnt/scratch/$USER/fs-test-meta",
-               "outcomes": {
-                  "good": "Commands succeed, good performance, no errors",
-                  "bad": "Filesystem issues or very slow performance"
-               }
-            }
-         ]
-      }
-   },
-   {
-      "id": "slurm",
-      "title": "Slurm Scheduler Status",
-      "priority": 0,
-      "goal": "Confirm job scheduler and nodes are available",
-      "estimated-time": "4-5 min",
-      "procedures": {
-         "cognition": [
-            {
-               "necessary": true,
-               "text": "  Run: sinfo -Nl   (or simply sinfo)",
-               "outcomes": {
-                  "good": "Nodes in \"idle/mixed/allocated\" states. gpu-l40s and gpu-h100 visible",
-                  "bad": "Many nodes down/drained or scheduler unresponsive"
-               }
-            }
-         ]
-      }
-   },
-   {
-      "id": "gpu",
-      "title": "GPU / Compute Node Availability",
-      "priority": 0,
-      "goal": "Quick check of the 16 GPU nodes",
-      "estimated-time": "3-4 min",
-      "procedures": {
-         "cognition": [
-            {
-               "necessary": true,
-               "text": "  Run: sinfo -Nl",
-               "outcomes": {
-                  "good": "node01-node16 mostly idle/mixed/allocated",
-                  "bad": "Large number of nodes missing or in bad states"
-               }
-            }
-         ]
-      }
-   },
-   {
-      "id": "submission",
-      "title": "Light Test Job Submission",
-      "priority": 0,
-      "goal": "Verify you can submit and run jobs",
-      "estimated-time": "5-6 min",
-      "procedures": {
-         "cognition": [
-            {
-               "necessary": true,
-               "text": "  1. CPU test: srun --time=00:01:00 --nodes=1 --ntasks=1 echo \"Test job OK on $(hostname)\"\n  2. Monitor: squeue -u $USER",
-               "outcomes": {
-                  "good": "Job runs and completes successfully",
-                  "bad": "Job fails to run or stays pending"
-               }
-            }
-         ]
-      }
-   },
-   {
-      "id": "service",
-      "title": "Services & Environment",
-      "priority": 0,
-      "goal": "Confirm basic environment works",
-      "estimated-time": "3-4 min",
-      "procedures": {
-         "cognition": [
-            {
-               "necessary": true,
-               "text": "  1. module avail   (or which srun)\n  2. squeue",
-               "outcomes": {
-                  "good": "Commands run normally",
-                  "bad": "Slurm commands fail or environment broken"
-               }
-            }
-         ]
-      }
-   },
-   {
-      "id": "cleanup",
-      "title": "Cleanup & Verification",
-      "priority": 0,
-      "goal": "Ensure you have left the cluster clean",
-      "estimated-time": "2 min",
-      "procedures": {
-         "cognition": [
-            {
-               "necessary": true,
-               "text": "  1. squeue -u $USER\n  2. Check and remove any leftover test files in ~ and /mnt/scratch/$USER\n  3. Run: quota",
-               "outcomes": {
-                  "good": "No running jobs, no temp files, quota back to normal",
-                  "bad": "Leftover jobs or files"
-               }
-            }
-         ]
-      }
-   }
-=======
   {
     "id": "login",
     "title": "Login & Basic Access",
     "priority": 0,
     "goal": "Confirm you can reach the login node",
     "estimated-time": "2-3 min",
-    "procedures": [
-      {
-        "necessary": true,
-        "text": "  SSH to login1.cognition.gla.alces.network and verify normal prompt",
-        "outcomes": {
-          "good": "You log in successfully",
-          "bad": "Login fails or times out"
+    "procedures": {
+      "cognition": [
+        {
+          "id": "ssh",
+          "necessary": true,
+          "text": "  SSH to login1.cognition.gla.alces.network and verify normal prompt",
+          "outcomes": {
+            "good": "You log in successfully",
+            "bad": "Login fails or times out"
+          }
+        },
+        {
+          "id": "other way",
+          "necessary": false,
+          "text": "  This is another way1",
+          "outcomes": {
+            "good": "yes",
+            "bad": "no"
+          }
         }
-      }
-    ]
+      ]
+    }
   },
   {
     "id": "home-directory",
-    "title": "Home Directory & User Quota + Filesystem Experience",
+    "title": "Home Directory & User Quota and Filesystem Experience",
     "priority": 0,
     "goal": "Confirm you can reach the login node",
     "estimated-time": "6-7 min",
-    "procedures": [
-      {
-        "necessary": true,
-        "text": "  1. Run: quota\n  2. Run: df -h ~\n  3. Quick block + metadata test:\n    time dd if=/dev/zero of=~/fs-test-file bs=1M count=50 conv=fdatasync && rm -f ~/fs-test-file\n    time mkdir -p ~/fs-test-meta && for i in {1..100}; do touch ~/fs-test-meta/file$i; done && rm -rf ~/fs-test-meta",
-        "outcomes": {
-          "good": "You log in successfully",
-          "bad": "Login fails or times out"
+    "procedures": {
+      "cognition": [
+        {
+          "id": "write time",
+          "necessary": true,
+          "text": "  1. Run: quota\n  2. Run: df -h ~\n  3. Quick block + metadata test:\n    time dd if=/dev/zero of=~/fs-test-file bs=1M count=50 conv=fdatasync && rm -f ~/fs-test-file\n    time mkdir -p ~/fs-test-meta && for i in {1..100}; do touch ~/fs-test-meta/file$i; done && rm -rf ~/fs-test-meta",
+          "outcomes": {
+            "good": "You log in successfully",
+            "bad": "Login fails or times out"
+          }
         }
-      }
-    ]
+      ]
+    }
   },
   {
     "id": "scratch",
@@ -201,16 +54,19 @@
     "priority": 0,
     "goal": "Verify Lustre scratch and test real filesystem experience in personal dir",
     "estimated-time": "5-6 min",
-    "procedures": [
-      {
-        "necessary": true,
-        "text": "  1. Run: lfs quota /mnt/scratch/\n  2. Run: ls /mnt/scratch/$USER\n  3. Quick test:\n    time dd if=/dev/zero of=/mnt/scratch/$USER/fs-test-file bs=1M count=50 conv=fdatasync && rm -f /mnt/scratch/$USER/fs-test-file\n    time mkdir -p /mnt/scratch/$USER/fs-test-meta && for i in {1..100}; do touch /mnt/scratch/$USER/fs-test-meta/file$i; done && rm -rf /mnt/scratch/$USER/fs-test-meta",
-        "outcomes": {
-          "good": "Commands succeed, good performance, no errors",
-          "bad": "Filesystem issues or very slow performance"
+    "procedures": {
+      "cognition": [
+        {
+          "id": "write time",
+          "necessary": true,
+          "text": "  1. Run: lfs quota /mnt/scratch/\n  2. Run: ls /mnt/scratch/$USER\n  3. Quick test:\n    time dd if=/dev/zero of=/mnt/scratch/$USER/fs-test-file bs=1M count=50 conv=fdatasync && rm -f /mnt/scratch/$USER/fs-test-file\n    time mkdir -p /mnt/scratch/$USER/fs-test-meta && for i in {1..100}; do touch /mnt/scratch/$USER/fs-test-meta/file$i; done && rm -rf /mnt/scratch/$USER/fs-test-meta",
+          "outcomes": {
+            "good": "Commands succeed, good performance, no errors",
+            "bad": "Filesystem issues or very slow performance"
+          }
         }
-      }
-    ]
+      ]
+    }
   },
   {
     "id": "slurm",
@@ -218,16 +74,19 @@
     "priority": 0,
     "goal": "Confirm job scheduler and nodes are available",
     "estimated-time": "4-5 min",
-    "procedures": [
-      {
-        "necessary": true,
-        "text": "  Run: sinfo -Nl   (or simply sinfo)",
-        "outcomes": {
-          "good": "Nodes in \"idle/mixed/allocated\" states. gpu-l40s and gpu-h100 visible",
-          "bad": "Many nodes down/drained or scheduler unresponsive"
+    "procedures": {
+      "cognition": [
+        {
+          "id": "sinfo",
+          "necessary": true,
+          "text": "  Run: sinfo -Nl   (or simply sinfo)",
+          "outcomes": {
+            "good": "Nodes in \"idle/mixed/allocated\" states. gpu-l40s and gpu-h100 visible",
+            "bad": "Many nodes down/drained or scheduler unresponsive"
+          }
         }
-      }
-    ]
+      ]
+    }
   },
   {
     "id": "gpu",
@@ -235,16 +94,19 @@
     "priority": 0,
     "goal": "Quick check of the 16 GPU nodes",
     "estimated-time": "3-4 min",
-    "procedures": [
-      {
-        "necessary": true,
-        "text": "  Run: sinfo -Nl",
-        "outcomes": {
-          "good": "node01-node16 mostly idle/mixed/allocated",
-          "bad": "Large number of nodes missing or in bad states"
+    "procedures": {
+      "cognition": [
+        {
+          "id": "sinfo",
+          "necessary": true,
+          "text": "  Run: sinfo -Nl",
+          "outcomes": {
+            "good": "node01-node16 mostly idle/mixed/allocated",
+            "bad": "Large number of nodes missing or in bad states"
+          }
         }
-      }
-    ]
+      ]
+    }
   },
   {
     "id": "submission",
@@ -252,16 +114,19 @@
     "priority": 0,
     "goal": "Verify you can submit and run jobs",
     "estimated-time": "5-6 min",
-    "procedures": [
-      {
-        "necessary": true,
-        "text": "  1. CPU test: srun --time=00:01:00 --nodes=1 --ntasks=1 echo \"Test job OK on $(hostname)\"\n  2. Monitor: squeue -u $USER",
-        "outcomes": {
-          "good": "Job runs and completes successfully",
-          "bad": "Job fails to run or stays pending"
+    "procedures": {
+      "cognition": [
+        {
+          "id": "srun",
+          "necessary": true,
+          "text": "  1. CPU test: srun --time=00:01:00 --nodes=1 --ntasks=1 echo \"Test job OK on $(hostname)\"\n  2. Monitor: squeue -u $USER",
+          "outcomes": {
+            "good": "Job runs and completes successfully",
+            "bad": "Job fails to run or stays pending"
+          }
         }
-      }
-    ]
+      ]
+    }
   },
   {
     "id": "service",
@@ -269,16 +134,19 @@
     "priority": 0,
     "goal": "Confirm basic environment works",
     "estimated-time": "3-4 min",
-    "procedures": [
-      {
-        "necessary": true,
-        "text": "  1. module avail   (or which srun)\n  2. squeue",
-        "outcomes": {
-          "good": "Commands run normally",
-          "bad": "Slurm commands fail or environment broken"
+    "procedures": {
+      "cognition": [
+        {
+          "id": "squeue",
+          "necessary": true,
+          "text": "  1. module avail   (or which srun)\n  2. squeue",
+          "outcomes": {
+            "good": "Commands run normally",
+            "bad": "Slurm commands fail or environment broken"
+          }
         }
-      }
-    ]
+      ]
+    }
   },
   {
     "id": "cleanup",
@@ -286,16 +154,18 @@
     "priority": 0,
     "goal": "Ensure you have left the cluster clean",
     "estimated-time": "2 min",
-    "procedures": [
-      {
-        "necessary": true,
-        "text": "  1. squeue -u $USER\n  2. Check and remove any leftover test files in ~ and /mnt/scratch/$USER\n  3. Run: quota",
-        "outcomes": {
-          "good": "No running jobs, no temp files, quota back to normal",
-          "bad": "Leftover jobs or files"
+    "procedures": {
+      "cognition": [
+        {
+          "id": "cleanup",
+          "necessary": true,
+          "text": "  1. squeue -u $USER\n  2. Check and remove any leftover test files in ~ and /mnt/scratch/$USER\n  3. Run: quota",
+          "outcomes": {
+            "good": "No running jobs, no temp files, quota back to normal",
+            "bad": "Leftover jobs or files"
+          }
         }
-      }
-    ]
+      ]
+    }
   }
->>>>>>> working
 ]
