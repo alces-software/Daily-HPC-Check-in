@@ -12,3 +12,5 @@ gem 'pastel', '~> 0.8.0'
 
 gem 'rubocop', '~> 1.86'
 gem 'terminal-table', '~> 4.0'
+
+gem "dotenv", "~> 3.2"

@@ -2,6 +2,7 @@
 
 require 'json'
 require 'date'
+require 'dotenv'
 
 module Daily
   # Scheduler is responsible for loading the daily check-in roster from
@@ -56,13 +57,12 @@ module Daily
       # config provides the list of people. It initializes all people
       # with completed = false.
       template_path = File.expand_path('../data/templates/schedule/schedule.json', __dir__)
-      config_path = File.expand_path('../data/shared/config.json', __dir__)
 
       template = JSON.parse(File.read(template_path))
-      config = JSON.parse(File.read(config_path))
+      env = Dotenv.load(File.expand_path('../.env', __dir__))
 
       @schedule = template
-      @schedule['people'] = config['people'].map { |name| { 'name' => name, 'completed' => false } }
+      @schedule['people'] = env['TESTERS'].split(',').map { |name| { 'name' => name, 'completed' => false } }
       save_schedule
     end
 
