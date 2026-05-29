@@ -11,13 +11,16 @@ module Daily
     def initialize
       # Loads step data from file
       self.class.instance_variable_set(:@step_data,
-                                       JSON.parse(File.open(File.expand_path('data/shared/steps.json')).read))
+                                       JSON.parse(File.open(File.expand_path('../data/shared/steps.json',
+                                                                             __dir__)).read))
       # Loads results template from file
       self.class.instance_variable_set(:@results,
-                                       JSON.parse(File.open(File.expand_path('data/templates/results.json')).read))
+                                       JSON.parse(File.open(File.expand_path('../data/templates/results.json',
+                                                                             __dir__)).read))
       # Loads test template from file
       self.class.instance_variable_set(:@test_template,
-                                       JSON.parse(File.open(File.expand_path('data/templates/test.json')).read))
+                                       JSON.parse(File.open(File.expand_path('../data/templates/test.json',
+                                                                             __dir__)).read))
       run
     end
 
@@ -29,7 +32,7 @@ module Daily
       date = Date.today.strftime('%d-%m-%Y')
 
       # Checks if the result file exists from today and if it does displays and error message
-      if File.exist?(File.expand_path("data/results/#{date}/results.json"))
+      if File.exist?(File.expand_path("../data/results/#{date}/results.json", __dir__))
         puts
         puts 'A daily check-in has already been performed for today use results to view it'
         puts
@@ -119,8 +122,11 @@ module Daily
       results['end-time'] = Time.new.utc
 
       # Checks whether the results and the current date directory exists and if not creates them
-      Dir.mkdir(File.expand_path('data/results')) unless Dir.exist?(File.expand_path('data/results'))
-      Dir.mkdir(File.expand_path("data/results/#{date}")) unless Dir.exist?(File.expand_path("data/results/#{date}"))
+      Dir.mkdir(File.expand_path('../data/results', __dir__)) unless Dir.exist?(File.expand_path('../data/results',
+                                                                                                 __dir__))
+      Dir.mkdir(File.expand_path("../data/results/#{date}", __dir__)) unless Dir.exist?(File.expand_path(
+                                                                                          "../data/results/#{date}", __dir__
+                                                                                        ))
 
       # Outputs a message telling the user that the results have been saved and where
       puts
@@ -128,7 +134,7 @@ module Daily
       puts
 
       # Writes the data to the file
-      File.write(File.expand_path("data/results/#{date}/results.json"),
+      File.write(File.expand_path("../data/results/#{date}/results.json", __dir__),
                  JSON.pretty_generate(results, max_nesting: false))
     end
   end

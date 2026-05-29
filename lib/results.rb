@@ -14,7 +14,7 @@ module Daily
   class Results
     def initialize(date: nil)
       @date = date || Date.today.strftime('%d-%m-%Y')
-      if Dir.exist?(File.expand_path('data/results'))
+      if Dir.exist?(File.expand_path('../data/results', __dir__))
 
         @base_path = File.expand_path('../data/results', __dir__)
         run

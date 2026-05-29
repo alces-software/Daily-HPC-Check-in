@@ -16,7 +16,7 @@ module Daily
     def run
       date = self.class.instance_variable_get(:@date)
 
-      unless File.exist?(File.expand_path("data/results/#{date}/results.json"))
+      unless File.exist?(File.expand_path("../data/results/#{date}/results.json", __dir__))
         puts
         puts "Today's system check pending..."
         puts
@@ -29,7 +29,7 @@ module Daily
         Results.new(date: date)
       end
 
-      file_path = File.expand_path("data/results/#{date}/results.txt")
+      file_path = File.expand_path("../data/results/#{date}/results.txt", __dir__)
 
       File.write(file_path, pastel.strip(output))
 
