@@ -117,9 +117,8 @@ module Daily
         export = prompt.yes?('Export to file?')
 
         if @failed && Date.strptime(@date, '%d-%m-%Y') == Time.now.utc.to_date
-         send_results(details_table, results_table)
+          send_results(details_table, results_table)
         end
-        
 
         return unless export
 
