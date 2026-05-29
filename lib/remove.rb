@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
+require 'fileutils'
+require 'tty-prompt'
+
 module Daily
   class Remover
     def remove_result(date: nil)
-      require 'fileutils'
-      require 'tty-prompt'
       prompt = TTY::Prompt.new
 
       date = Date.today.strftime('%d-%m-%Y') if date.nil?

@@ -4,5 +4,26 @@
    "priority": 0,
    "goal": "",
    "estimated-time": "",
-   "procedures": []
+   "procedures": {
+      "": [
+         {
+            "necessary": false,
+            "text": "",
+            "outcomes": {
+               "good": "",
+               "bad": ""
+            }
+         }
+      ],
+      "HP2": [
+         {
+            "necessary": false,
+            "text": "",
+            "outcomes": {
+               "good": "",
+               "bad": ""
+            }
+         }
+      ]
+   }
 }
