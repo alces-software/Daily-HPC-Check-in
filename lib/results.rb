@@ -9,6 +9,7 @@ require_relative '../lib/start'
 
 require 'pastel'
 require 'terminal-table'
+require 'tty-prompt'
 
 module Daily
   class Results
@@ -93,6 +94,34 @@ module Daily
         results_table = Terminal::Table.new title: "Results for #{@date}",
                                             headings: %w[Outcome Task Notes], rows: tasks
         puts results_table
+        prompt = TTY::Prompt.new
+
+
+        export = prompt.yes?("Export to txt file? (y/N)")
+        
+        if export
+          puts "Exported to data/results_text/#{@date}"
+          details_output = details_table.to_s
+          results_output = results_table.to_s
+          
+          
+
+          Dir.mkdir(File.expand_path('data/results_text')) unless Dir.exist?(File.expand_path('data/results_text'))
+
+          
+          output_file = File.expand_path("../data/results_text/#{@date}-results.txt",__dir__)
+          
+          def strip_ansi(text)
+            text.gsub(/\e\[[0-9;]*m/, '')
+          end
+          
+          File.write(
+            output_file,
+            strip_ansi("#{details_table}\n\n#{results_table}")
+            )
+        end
+
+
       end
 
       load_data(file_path)

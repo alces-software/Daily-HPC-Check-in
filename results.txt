@@ -25,3 +25,6 @@
 | PASS    | Services & Environment                              |           |
 | PASS    | Cleanup & Verification                              |           |
 +---------+-----------------------------------------------------+-----------+
+Export to txt file? (y/N) [90m(Y/n)[0m [2K[1GExport to txt file? (y/N) [90m(Y/n)[0m 
+[1A[2K[1GExport to txt file? (y/N) [32mYes[0m
+Exported to data/results_text/29-05-2026
