@@ -4,9 +4,6 @@ require 'bundler/setup'
 require 'dry/cli'
 require 'json'
 require 'time'
-
-require_relative '../lib/start'
-
 require 'pastel'
 require 'terminal-table'
 require 'tty-prompt'

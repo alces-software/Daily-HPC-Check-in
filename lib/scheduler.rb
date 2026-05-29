@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'json'
+require 'date'
+
 module Daily
   # Scheduler is responsible for loading the daily check-in roster from
   # data/schedule.json, choosing a random person whose completed state is
@@ -40,8 +43,6 @@ module Daily
 
     def loadschedule
       # Loads the schedule from the JSON file. If the file doesn't exist, it generates a new schedule.
-      require 'json'
-      require 'date'
 
       path = schedule_path
       generate_new_schedule unless File.exist?(path)
@@ -54,8 +55,6 @@ module Daily
       # The template defines the structure of the schedule, while the
       # config provides the list of people. It initializes all people
       # with completed = false.
-      require 'json'
-      require 'date'
       template_path = File.expand_path('../data/templates/schedule.json', __dir__)
       config_path = File.expand_path('../data/config.json', __dir__)
 
@@ -114,7 +113,6 @@ module Daily
 
     def save_schedule
       # Saves the current schedule to the JSON file.
-      require 'json'
 
       File.write(schedule_path, JSON.pretty_generate(@schedule))
     end

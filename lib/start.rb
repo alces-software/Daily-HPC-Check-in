@@ -14,7 +14,7 @@ module Daily
                                        JSON.parse(File.open(File.expand_path('../data/shared/steps.json',
                                                                              __dir__)).read))
       # Loads results template from file
-      self.class.instance_variable_set(:@results,
+      self.class.instance_variable_set(:@results_template,
                                        JSON.parse(File.open(File.expand_path('../data/templates/results.json',
                                                                              __dir__)).read))
       # Loads test template from file
@@ -30,26 +30,28 @@ module Daily
     def run
       # Gets today's date in the correct formatting for the file structure
       date = Date.today.strftime('%d-%m-%Y')
+      target_hpc = 'cognition'
+      results_path = File.expand_path("../data/results/#{date}/results.json", __dir__)
 
-      # Checks if the result file exists from today and if it does displays and error message
-      if File.exist?(File.expand_path("../data/results/#{date}/results.json", __dir__))
+      # Gets all the relevant data for the tests
+      steps = self.class.instance_variable_get(:@step_data)
+      test_template = self.class.instance_variable_get(:@test_template)
+
+      # Loads the previous
+      results = File.exist?(results_path) ? JSON.parse(File.open(results_path).read) : {}
+
+      if results[target_hpc].nil?
+        results[target_hpc] =
+          JSON.parse(JSON.generate(self.class.instance_variable_get(:@results_template)))
+      else
         puts
         puts 'A daily check-in has already been performed for today use results to view it'
         puts
         return
       end
 
-      # Gets all the relevant data for the tests
-      steps = self.class.instance_variable_get(:@step_data)
-      results = self.class.instance_variable_get(:@results)
-      test_template = self.class.instance_variable_get(:@test_template)
-
       # Creates new prompt class
       prompt = TTY::Prompt.new
-
-      # Get the amount of steps and. current step
-      steps_size = steps.length + 1
-      step_position = 1
 
       # Displays a message to user to ask if they are ready to start
       print "\e[H\e[2J"
@@ -67,11 +69,30 @@ module Daily
       end
 
       # Adds the name of the tester and the current data and time to the results
-      results['tester'] = Daily::Scheduler.new.person
-      results['start-time'] = Time.new.utc
+      results[target_hpc]['tester'] = Daily::Scheduler.new.person
+      results[target_hpc]['start-time'] = Time.new.utc
+
+      steps = steps.filter do |step|
+        !step['procedures'][target_hpc].nil?
+      end
+
+      # Get the amount of steps and. current step
+      steps_size = steps.length + 1
+      step_position = 1
 
       # Loops through the steps and displays the data that is in the file for the user
       steps.each do |step|
+        next if step['procedures'][target_hpc].nil?
+
+        # Select required and optional procedures using the 'necessary' flag
+        required_procedure = step['procedures'][target_hpc].filter do |procedure|
+          procedure['necessary']
+        end
+
+        optional_procedures = step['procedures'][target_hpc].filter do |procedure|
+          !procedure['necessary']
+        end
+
         test = test_template.dup
         test['title'] = step['title']
 
@@ -82,10 +103,21 @@ module Daily
         puts "Title: #{step['title']}"
         puts "est:   (#{step['estimated-time']})"
         puts '-------------------------------------------------------------------------------'
-        puts step['procedures'][0]['text']
+        puts required_procedure[0]['text']
         puts '-------------------------------------------------------------------------------'
-        puts "Healthy: #{step['procedures'][0]['outcomes']['good']}"
-        puts "Red:     #{step['procedures'][0]['outcomes']['bad']}"
+        puts "Healthy: #{required_procedure[0]['outcomes']['good']}"
+        puts "Red:     #{required_procedure[0]['outcomes']['bad']}"
+        unless optional_procedures.empty?
+          selected_procedure = optional_procedures.sample
+          puts
+          puts '-------------------------------------------------------------------------------'
+          puts 'Alternative method'
+          puts '-------------------------------------------------------------------------------'
+          puts selected_procedure['text']
+          puts '-------------------------------------------------------------------------------'
+          puts "Healthy: #{selected_procedure['outcomes']['good']}"
+          puts "Red:     #{selected_procedure['outcomes']['bad']}"
+        end
         puts
 
         # Gathers passed information from user and adds it to the test result
@@ -100,9 +132,10 @@ module Daily
           test['notes'] = input.join('')
         end
 
-        # Push the test result to the results
-        results['results'].push(test)
         step_position += 1
+
+        # Push the test result to the results
+        results[target_hpc]['results'].push(test)
       end
 
       # Display final message to user
@@ -119,22 +152,28 @@ module Daily
       prompt.ask('Press enter to save check results and exit out')
 
       # Adds the current time and date once finished to the results file
-      results['end-time'] = Time.new.utc
+      results[target_hpc]['end-time'] = Time.new.utc
 
       # Checks whether the results and the current date directory exists and if not creates them
-      Dir.mkdir(File.expand_path('../data/results', __dir__)) unless Dir.exist?(File.expand_path('../data/results',
-                                                                                                 __dir__))
-      Dir.mkdir(File.expand_path("../data/results/#{date}", __dir__)) unless Dir.exist?(File.expand_path(
-                                                                                          "../data/results/#{date}", __dir__
-                                                                                        ))
+      unless Dir.exist?(File.expand_path('../data/results',
+                                         __dir__))
+        Dir.mkdir(File.expand_path('../data/results',
+                                   __dir__))
+      end
+      unless Dir.exist?(File.expand_path(
+                          "../data/results/#{date}", __dir__
+                        ))
+        Dir.mkdir(File.expand_path("../data/results/#{date}",
+                                   __dir__))
+      end
 
       # Outputs a message telling the user that the results have been saved and where
       puts
-      puts "Saving the check-in results to #{File.expand_path("data/results/#{date}/results.json")}"
+      puts "Saving the check-in results to #{results_path}"
       puts
 
       # Writes the data to the file
-      File.write(File.expand_path("../data/results/#{date}/results.json", __dir__),
+      File.write(File.expand_path(results_path, __dir__),
                  JSON.pretty_generate(results, max_nesting: false))
     end
   end
