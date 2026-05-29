@@ -7,21 +7,23 @@ require_relative 'scheduler'
 
 module Daily
   class Start
+    # Initializes the wizard class
     def initialize
-      # Gets steps file and loads its data into the class
-      steps_file = File.open File.expand_path('data/shared/steps.json')
-      self.class.instance_variable_set(:@step_data, JSON.parse(steps_file.read))
-      # Gets the results template and loads it into the class
-      results_template_file = File.open File.expand_path('data/templates/results.json')
-      self.class.instance_variable_set(:@results, JSON.parse(results_template_file.read))
-      # Gets the test template and loads it into the class
-      test_template_file = File.open File.expand_path('data/templates/test.json')
-      self.class.instance_variable_set(:@test_template, JSON.parse(test_template_file.read))
+      # Loads step data from file
+      self.class.instance_variable_set(:@step_data,
+                                       JSON.parse(File.open(File.expand_path('data/shared/steps.json')).read))
+      # Loads results template from file
+      self.class.instance_variable_set(:@results,
+                                       JSON.parse(File.open(File.expand_path('data/templates/results.json')).read))
+      # Loads test template from file
+      self.class.instance_variable_set(:@test_template,
+                                       JSON.parse(File.open(File.expand_path('data/templates/test.json')).read))
       run
     end
 
     private
 
+    # Runs the wizard
     def run
       # Gets today's date in the correct formatting for the file structure
       date = Date.today.strftime('%d-%m-%Y')
@@ -45,6 +47,21 @@ module Daily
       # Get the amount of steps and. current step
       steps_size = steps.length + 1
       step_position = 1
+
+      # Displays a message to user to ask if they are ready to start
+      print "\e[H\e[2J"
+      puts
+      puts '-------------------------------------------------------------------------------'
+      puts 'Connect to cognition HPC using: ssh cognition'
+      puts '-------------------------------------------------------------------------------'
+      puts
+
+      unless prompt.yes?('Are you ready to start the wizard?')
+        puts
+        puts 'Ok closing out of the wizard start again when you are ready'
+        puts
+        return
+      end
 
       # Adds the name of the tester and the current data and time to the results
       results['tester'] = Daily::Scheduler.new.person
@@ -96,7 +113,7 @@ module Daily
       puts 'Any RED item → Report immediately to OPS with exact command output'
       puts
 
-      prompt.yes?('Are you finished?')
+      prompt.ask('Press enter to save check results and exit out')
 
       # Adds the current time and date once finished to the results file
       results['end-time'] = Time.new.utc
