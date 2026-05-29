@@ -50,7 +50,7 @@ module Daily
     class Results < Dry::CLI::Command
       desc 'Displays test details and results'
 
-      argument :date, required: false, desc: 'Filter results by date (YYYY-MM-DD)'
+      argument :date, required: false, desc: 'Filter results by date (DD-MM-YYYY)'
 
       def call(date: nil, **)
         Daily::Results.new(date: date)
