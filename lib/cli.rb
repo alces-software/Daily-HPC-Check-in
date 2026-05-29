@@ -6,6 +6,7 @@ require 'dry/cli'
 require_relative 'start'
 require_relative 'scheduler'
 require_relative 'results'
+require_relative 'remove'
 
 module Daily
   module CLI
@@ -55,6 +56,16 @@ module Daily
       def call(date: nil, **)
         Daily::Results.new(date: date)
       end
+
+      class Remove < Dry::CLI::Command
+        desc 'Removes the result for a specific date'
+
+        argument :date, required: false, desc: 'Date for which to remove results (YYYY-MM-DD)'
+
+        def call(date: nil, **)
+          Daily::Remover.new.remove_result(date: date)
+        end
+      end
     end
 
     register 'version', Version, aliases: ['v', '-v', '--version']
@@ -62,5 +73,6 @@ module Daily
     register 'who', Who, aliases: ['w', '-w', '--who']
     register 'who new', Who::New, aliases: ['we', '-we', '--who new']
     register 'results', Results, aliases: ['r', '-r', '--results']
+    register 'results remove', Results::Remove, aliases: ['rr', '-rr', '--results remove']
   end
 end
