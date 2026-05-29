@@ -36,4 +36,6 @@ Run `cd Daily-HPC-Check-in`
 
 and `bundle install`
 
-The project can be run from `./run.sh`
+add daily to the $PATH
+
+add the following to the end of ~/.bashrc: `export PATH="$PATH:~/<PATH_TO_REPO>/bin/`
