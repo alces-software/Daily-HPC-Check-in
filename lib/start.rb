@@ -15,11 +15,11 @@ module Daily
                                                                              __dir__)).read))
       # Loads results template from file
       self.class.instance_variable_set(:@results_template,
-                                       JSON.parse(File.open(File.expand_path('../data/templates/results.json',
+                                       JSON.parse(File.open(File.expand_path('../data/templates//results/results.json',
                                                                              __dir__)).read))
       # Loads test template from file
       self.class.instance_variable_set(:@test_template,
-                                       JSON.parse(File.open(File.expand_path('../data/templates/test.json',
+                                       JSON.parse(File.open(File.expand_path('../data/templates/results/test.json',
                                                                              __dir__)).read))
       run
     end
