@@ -39,3 +39,5 @@ and `bundle install`
 add daily to the $PATH
 
 add the following to the end of ~/.bashrc: `export PATH="$PATH:~/<PATH_TO_REPO>/bin/`
+
+the program can also be run from `<PATH_TO_REPO>/bin/daily`
