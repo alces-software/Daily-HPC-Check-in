@@ -67,7 +67,7 @@ module Daily
         minutes = (diff % 3600) / 60
         seconds = diff % 60
 
-        pastel = Pastel.new
+        pastel = Pastel.new(enabled: $stdout.tty?)
 
         rows = []
         rows << ['Tester', @data['tester']]

@@ -1,0 +1,27 @@
++-----------------------+
+|     Test details      |
++----------+------------+
+| Tester   | Alex       |
+| Date     | 29-05-2026 |
+| Start    | 08:27:09   |
+| End      | 08:27:44   |
+| Duration | 00:00:35   |
++----------+------------+
++---------------------------------------------------------------------------+
+|                          Results for 29-05-2026                           |
++---------+-----------------------------------------------------+-----------+
+| Outcome | Task                                                | Notes     |
++---------+-----------------------------------------------------+-----------+
+| PASS    | Login & Basic Access                                |           |
+| PASS    | Home Directory & User Quota + Filesystem Experience |           |
+| PASS    | Scratch / Lustre Storage + Filesystem Experience    |           |
+| PASS    | Slurm Scheduler Status                              |           |
+| FAIL    | GPU / Compute Node Availability                     |           |
+| FAIL    | Light Test Job Submission                           | ffd       |
+|         |                                                     | asdfas    |
+|         |                                                     | sadfsdf   |
+|         |                                                     | asdfasdf  |
+|         |                                                     | sadfasdfs |
+| PASS    | Services & Environment                              |           |
+| PASS    | Cleanup & Verification                              |           |
++---------+-----------------------------------------------------+-----------+
