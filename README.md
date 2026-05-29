@@ -53,9 +53,9 @@ To obtain the webhook api key:
 
 1) Navigate to desired google chat
 2) Click on the dropdown menu of the chat name (expand chat if dropdown not showing)
-3) Select 'Apps and integrations'
-4) Press '+ Add webhooks'
+3) Select `Apps and integrations`
+4) Press `+ Add webhooks`
 5) Name webhook and then save
-6) Copy generated api key into .env file
+6) Copy generated api key into `.env` file
 
 
