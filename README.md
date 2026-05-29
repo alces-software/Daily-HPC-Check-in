@@ -43,3 +43,19 @@ add daily to the $PATH
 add the following to the end of ~/.bashrc: `export PATH="$PATH:~/<PATH_TO_REPO>/bin/`
 
 the program can also be run from `<PATH_TO_REPO>/bin/daily`
+
+### Instructions for obtaining Google Chat Api Key
+Daily-HPC-Check-in includes a feature that will automatically send the table of results if a FAILURE has occured.
+
+It will send the results to a specified google chat using a webhook.
+
+To obtain the webhook api key:
+
+1) Navigate to desired google chat
+2) Click on the dropdown menu of the chat name (expand chat if dropdown not showing)
+3) Select `Apps and integrations`
+4) Press `+ Add webhooks`
+5) Name webhook and then save
+6) Copy generated api key into `.env` file
+
+
