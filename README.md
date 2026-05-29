@@ -32,6 +32,8 @@ If ruby is installing an older version, reset the module stream with
 
 `dnf module enable ruby:3.3`
 
-Run `bundle install`
+Run `cd Daily-HPC-Check-in`
+
+and `bundle install`
 
 The project can be run from `./run.sh`
