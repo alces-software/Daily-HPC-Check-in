@@ -9,7 +9,7 @@ CLI tool to assist with tasks related to checking clusters
 - `daily who new` picks a new person in the event the previous person was unavailable
 - `daily results <date>` outputs the results for the specified date or today's results if no date is specified
 
-## Instalation
+## Installation
 
 ### On Almalinux
 Clone the repository
@@ -30,6 +30,8 @@ If ruby is installing an older version, reset the module stream with
 
 `dnf module enable ruby:3.3`
 
-Run `bundle install`
+Run `cd Daily-HPC-Check-in`
+
+and `bundle install`
 
 The project can be run from `./run.sh`
