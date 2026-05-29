@@ -30,6 +30,8 @@ module Daily
     def run
       # Gets today's date in the correct formatting for the file structure
       date = Date.today.strftime('%d-%m-%Y')
+      target_hpc = 'cognition'
+      results_path = File.expand_path("../data/results/#{date}/results.json", __dir__)
 
       # Gets all the relevant data for the tests
       steps = self.class.instance_variable_get(:@step_data)
