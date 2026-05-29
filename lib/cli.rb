@@ -7,6 +7,7 @@ require_relative 'start'
 require_relative 'scheduler'
 require_relative 'results'
 require_relative 'remove'
+require_relative 'export'
 
 module Daily
   module CLI
@@ -51,7 +52,7 @@ module Daily
     class Results < Dry::CLI::Command
       desc 'Displays test details and results'
 
-      argument :date, required: false, desc: 'Filter results by date (YYYY-MM-DD)'
+      argument :date, required: false, desc: 'Filter results by date (DD-MM-YYYY)'
 
       def call(date: nil, **)
         Daily::Results.new(date: date)
@@ -60,19 +61,33 @@ module Daily
       class Remove < Dry::CLI::Command
         desc 'Removes the result for a specific date'
 
-        argument :date, required: false, desc: 'Date for which to remove results (YYYY-MM-DD)'
+        argument :date, required: false, desc: 'Date for which to remove results (DD-MM-YYYY)'
 
         def call(date: nil, **)
           Daily::Remover.new.remove_result(date: date)
         end
       end
+
+      class Export < Dry::CLI::Command
+        desc 'Creates a text copy of the results.json file'
+
+        argument :date, required: false, desc: 'Date for which to remove results (DD-MM-YYYY)'
+
+        def call(date: nil, **)
+          Daily::Export.new(date: date)
+        end
+      end
     end
 
     register 'version', Version, aliases: ['v', '-v', '--version']
+
     register 'start', Start, aliases: ['s', '-s', '--start']
+
     register 'who', Who, aliases: ['w', '-w', '--who']
     register 'who new', Who::New, aliases: ['we', '-we', '--who new']
+
     register 'results', Results, aliases: ['r', '-r', '--results']
     register 'results remove', Results::Remove, aliases: ['rr', '-rr', '--results remove']
+    register 'results export', Results::Export, aliases: ['re', '-re', '--results export']
   end
 end
