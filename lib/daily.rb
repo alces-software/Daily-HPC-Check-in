@@ -9,6 +9,7 @@ require_relative 'results'
 require_relative 'remove'
 require_relative 'export'
 require_relative 'daily/version'
+require_relative 'edit_steps'
 
 module Daily
   module CLI
@@ -80,9 +81,19 @@ module Daily
       end
     end
 
+    class Edit < Dry::CLI::Command
+      desc 'Opens the step editing wizard'
+
+      def call(*)
+        Daily::Editor.new.run
+      end
+    end
+
     register 'version', Version, aliases: ['v', '-v', '--version']
 
     register 'start', Start, aliases: ['s', '-s', '--start']
+
+    register 'edit', Edit
 
     register 'who', Who, aliases: ['w', '-w', '--who']
     register 'who new', Who::New, aliases: ['we', '-we', '--who new']
