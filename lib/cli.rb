@@ -57,10 +57,10 @@ module Daily
       end
     end
 
-    register 'version',    Version, aliases: ['v', '-v', '--version']
-    register 'start',      Start
-    register 'who',        Who
-    register 'who new',    Who::New
-    register 'results',    Results
+    register 'version', Version, aliases: ['v', '-v', '--version']
+    register 'start', Start, aliases: ['s', '-s', '--start']
+    register 'who', Who, aliases: ['w', '-w', '--who']
+    register 'who new', Who::New, aliases: ['we', '-we', '--who new']
+    register 'results', Results, aliases: ['r', '-r', '--results']
   end
 end
