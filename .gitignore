@@ -10,7 +10,7 @@
 /test/version_tmp/
 /tmp/
 /data/results
-.env
+/.env
 
 # Used by dotenv library to load environment variables.
 # .env

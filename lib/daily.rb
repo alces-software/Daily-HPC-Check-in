@@ -102,9 +102,9 @@ module Daily
 
     register 'start', Start, aliases: ['s', '-s', '--start']
 
-    register 'env', Env, aliases: ['e', '-e', '--env']
+    register 'env', Env, aliases: ['ev', '-ev', '--env']
 
-    register 'edit', Edit
+    register 'edit', Edit, aliases: ['e', '-e', '--edit']
 
     register 'who', Who, aliases: ['w', '-w', '--who']
     register 'who new', Who::New, aliases: ['we', '-we', '--who new']
