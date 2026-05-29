@@ -16,8 +16,6 @@ module Daily
     def run
       date = self.class.instance_variable_get(:@date)
 
-      puts File.expand_path("data/results/#{date}/results.json")
-
       unless File.exist?(File.expand_path("data/results/#{date}/results.json"))
         puts
         puts "Today's system check pending..."

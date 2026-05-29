@@ -74,7 +74,7 @@ module Daily
         argument :date, required: false, desc: 'Date for which to remove results (DD-MM-YYYY)'
 
         def call(date: nil, **)
-          Daily::Export.new(date)
+          Daily::Export.new(date: date)
         end
       end
     end
