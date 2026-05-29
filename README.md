@@ -12,15 +12,22 @@ CLI tool to assist with tasks related to checking clusters
 ## Instalation
 
 ### On Almalinux
-clone the repository
+Clone the repository
+
 `git clone https://github.com/alces-software/Daily-HPC-Check-in`
+
 Make sure the development tools are installed
+
 `dnf groupinstall "Development Tools"`
+
 Make sure ruby and ruby-devel are installed with a version >= 3.2.0
+
 `dnf install ruby ruby-devel`
 
 If ruby is installing an older version, reset the module stream with
+
 `dnf module reset ruby`
+
 `dnf module enable ruby:3.3`
 
 Run `bundle install`
