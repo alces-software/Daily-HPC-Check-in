@@ -4,6 +4,7 @@ require 'bundler/setup'
 require 'dry/cli'
 require 'json'
 require 'time'
+require 'dotenv'
 
 require_relative '../lib/start'
 
@@ -17,6 +18,8 @@ require 'uri'
 module Daily
   class Results
     def initialize(date: nil)
+      env = Dotenv.load(File.expand_path('../.env', __dir__))
+      @WEBHOOK_URL = env['WEBHOOK_API_KEY']
       @date = date || Date.today.strftime('%d-%m-%Y')
 
       @failed = false
@@ -116,9 +119,9 @@ module Daily
 
         export = prompt.yes?("Export to file?")
 
-        # if @failed && Date.strptime(@date, '%d-%m-%Y') == Time.now.utc.to_date
-        #  send_results(details_table, results_table)
-        # end
+        if @failed && Date.strptime(@date, '%d-%m-%Y') == Time.now.utc.to_date
+         send_results(details_table, results_table)
+        end
         
 
         if export
