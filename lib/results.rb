@@ -18,7 +18,7 @@ module Daily
   class Results
     def initialize(date: nil)
       @date = date || Date.today.strftime('%d-%m-%Y')
-      @WEBHOOK_URL = "https://chat.googleapis.com/v1/spaces/AAQAflTaMjQ/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=-RQg2koh_yYkbtsm7mMuH4uDHep_sGQnsUWeW8KLLkg"
+
       @failed = false
       if Dir.exist?(File.expand_path('../data/results', __dir__))
 
@@ -116,9 +116,9 @@ module Daily
 
         export = prompt.yes?("Export to file?")
 
-        if @failed && Date.strptime(@date, '%d-%m-%Y') == Time.now.utc.to_date
-         send_results(details_table, results_table)
-        end
+        # if @failed && Date.strptime(@date, '%d-%m-%Y') == Time.now.utc.to_date
+        #  send_results(details_table, results_table)
+        # end
         
 
         if export
