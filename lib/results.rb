@@ -96,32 +96,26 @@ module Daily
         puts results_table
         prompt = TTY::Prompt.new
 
+        export = prompt.yes?('Export to txt file? (y/N)')
 
-        export = prompt.yes?("Export to txt file? (y/N)")
-        
-        if export
-          puts "Exported to data/results_text/#{@date}"
-          details_output = details_table.to_s
-          results_output = results_table.to_s
-          
-          
+        return unless export
 
-          Dir.mkdir(File.expand_path('data/results_text')) unless Dir.exist?(File.expand_path('data/results_text'))
+        puts "Exported to data/results_text/#{@date}"
+        details_table.to_s
+        results_table.to_s
 
-          
-          output_file = File.expand_path("../data/results_text/#{@date}-results.txt",__dir__)
-          
-          def strip_ansi(text)
-            text.gsub(/\e\[[0-9;]*m/, '')
-          end
-          
-          File.write(
-            output_file,
-            strip_ansi("#{details_table}\n\n#{results_table}")
-            )
+        Dir.mkdir(File.expand_path('data/results_text')) unless Dir.exist?(File.expand_path('data/results_text'))
+
+        output_file = File.expand_path("../data/results_text/#{@date}-results.txt", __dir__)
+
+        def strip_ansi(text)
+          text.gsub(/\e\[[0-9;]*m/, '')
         end
 
-
+        File.write(
+          output_file,
+          strip_ansi("#{details_table}\n\n#{results_table}")
+        )
       end
 
       load_data(file_path)
