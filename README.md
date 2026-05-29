@@ -1,5 +1,6 @@
-# Daily-HPC-Check-in
 [![RuboCop Auto Fix](https://github.com/alces-software/Daily-HPC-Check-in/actions/workflows/rubocop.yml/badge.svg)](https://github.com/alces-software/Daily-HPC-Check-in/actions/workflows/rubocop.yml)
+
+# Daily-HPC-Check-in
 CLI tool to assist with tasks related to checking clusters
 
 ## Usage
