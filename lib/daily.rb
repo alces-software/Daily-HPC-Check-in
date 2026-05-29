@@ -10,6 +10,7 @@ require_relative 'remove'
 require_relative 'export'
 require_relative 'daily/version'
 require_relative 'edit_steps'
+require_relative 'env'
 
 module Daily
   module CLI
@@ -28,6 +29,14 @@ module Daily
 
       def call(*)
         Daily::Start.new
+      end
+    end
+
+    class Env < Dry::CLI::Command
+      desc 'Sets up the environment variables for daily'
+
+      def call(*)
+        Daily::Env.new
       end
     end
 
@@ -92,6 +101,8 @@ module Daily
     register 'version', Version, aliases: ['v', '-v', '--version']
 
     register 'start', Start, aliases: ['s', '-s', '--start']
+
+    register 'env', Env, aliases: ['e', '-e', '--env']
 
     register 'edit', Edit
 
