@@ -8,6 +8,7 @@ require_relative 'scheduler'
 require_relative 'results'
 require_relative 'remove'
 require_relative 'export'
+require_relative 'daily/version'
 
 module Daily
   module CLI
@@ -17,7 +18,7 @@ module Daily
       desc 'Prints the CLI version'
 
       def call(*)
-        puts '1.0.0'
+        puts Daily::VERSION
       end
     end
 

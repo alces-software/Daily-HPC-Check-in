@@ -2,6 +2,6 @@
 # frozen_string_literal: true
 
 root = File.expand_path('..', __dir__)
-require "#{root}/lib/cli"
+require "#{root}/lib/daily"
 
 Dry::CLI.new(Daily::CLI).call
