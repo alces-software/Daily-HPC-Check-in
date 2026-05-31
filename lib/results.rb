@@ -1,19 +1,15 @@
 # frozen_string_literal: true
 
-require 'bundler/setup'
-require 'dry/cli'
 require 'json'
 require 'time'
 require 'dotenv'
-
-require_relative '../lib/start'
-
 require 'pastel'
 require 'terminal-table'
 require 'tty-prompt'
-
 require 'net/http'
 require 'uri'
+
+require_relative '../lib/start'
 
 module Daily
   class Results
@@ -22,7 +18,6 @@ module Daily
       @WEBHOOK_URL = env['WEBHOOK_API_KEY']
       @date = date || Date.today.strftime('%d-%m-%Y')
 
-      @failed = false
       if Dir.exist?(File.expand_path('../data/results', __dir__))
 
         @base_path = File.expand_path('../data/results', __dir__)
@@ -31,6 +26,8 @@ module Daily
         puts 'No data to display. Perform checks to display results.'
       end
     end
+
+    private
 
     def run
       today = Time.now.utc.to_date
@@ -61,73 +58,88 @@ module Daily
         return
       end
 
-      def load_data(file_path)
-        file_path = File.expand_path("../data/results/#{@date}/results.json", __dir__)
-        @data = JSON.parse(File.read(file_path))
+      def load_data
+        @data = JSON.parse(File.read(File.expand_path("../data/results/#{@date}/results.json", __dir__)))
       end
 
       def render_results
-        start_time = Time.parse(@data['start-time'])
-        end_time   = Time.parse(@data['end-time'])
+        output = []
+        failed_results = []
 
-        diff = end_time - start_time
+        @data.each_key do |key|
+          failed = false
+          data_key = @data[key]
+          start_time = Time.parse(data_key['start-time'])
+          end_time   = Time.parse(data_key['end-time'])
 
-        hours   = (diff / 3600).to_i
-        minutes = (diff % 3600) / 60
-        seconds = diff % 60
+          diff = end_time - start_time
 
-        pastel = Pastel.new(enabled: $stdout.tty?)
+          hours   = (diff / 3600).to_i
+          minutes = (diff % 3600) / 60
+          seconds = diff % 60
 
-        rows = []
-        rows << ['Tester', @data['tester']]
-        rows << ['Date', @date]
-        rows << ['Start', start_time.utc.strftime('%H:%M:%S')]
-        rows << ['End', end_time.utc.strftime('%H:%M:%S')]
-        rows << ['Duration', format('%02d:%02d:%02d', hours, minutes, seconds)]
+          pastel = Pastel.new(enabled: $stdout.tty?)
 
-        details_table = Terminal::Table.new title: 'Test details', rows: rows
+          rows = []
+          rows << ['Tester', data_key['tester']]
+          rows << ['HPC', key]
+          rows << ['Date', @date]
+          rows << ['Start', start_time.utc.strftime('%H:%M:%S')]
+          rows << ['End', end_time.utc.strftime('%H:%M:%S')]
+          rows << ['Duration', format('%02d:%02d:%02d', hours, minutes, seconds)]
 
-        puts details_table
+          details_table = Terminal::Table.new title: 'Test details', rows: rows
 
-        tasks = []
+          output.push(details_table)
 
-        @data['results'].each do |result|
-          if result['passed']
-            tasks << [
-              pastel.green('PASS'),
-              pastel.green(result['title']),
-              result['notes']
-            ]
-          else
-            @failed = true
+          tasks = []
 
-            tasks << [
-              pastel.bold.red('FAIL'),
-              pastel.bold.red(result['title']),
-              result['notes']
-            ]
+          data_key['results'].each do |result|
+            if result['passed']
+              tasks << [
+                pastel.green('PASS'),
+                pastel.green(result['title']),
+                result['notes']
+              ]
+            else
+              failed = true
+
+              tasks << [
+                pastel.bold.red('FAIL'),
+                pastel.bold.red(result['title']),
+                result['notes']
+              ]
+            end
           end
+
+          results_table = Terminal::Table.new title: "#{key} results for #{@date}",
+                                              headings: %w[Outcome Task Notes], rows: tasks
+
+          output.push(results_table)
+
+          failed_results.push([details_table, results_table]) if failed
         end
 
-        results_table = Terminal::Table.new title: "Results for #{@date}",
-                                            headings: %w[Outcome Task Notes], rows: tasks
-        puts results_table
-        prompt = TTY::Prompt.new
+        output.each do |out|
+          puts out
+        end
 
-        export = prompt.yes?('Export to file?')
+        export = TTY::Prompt.new.yes?('Export to file?')
 
-        if @failed && Date.strptime(@date, '%d-%m-%Y') == Time.now.utc.to_date
-          send_results(details_table, results_table)
+        if !failed_results.empty? && Date.strptime(@date, '%d-%m-%Y') == Time.now.utc.to_date
+          failed_results.each do |hpc|
+            send_results(hpc[0], hpc[1])
+          end
         end
 
         return unless export
 
         Dir.mkdir(File.expand_path('../data/results_text', __dir__)) unless Dir.exist?(File.expand_path(
-                                                                                         '../data/results_text', __dir__
+                                                                                         "../data/results/#{@date}", __dir__
                                                                                        ))
-        File.write(File.expand_path("../data/results_text/#{@date}.txt", __dir__),
-                   "#{details_table}\n\n#{results_table}".gsub(/\e\[[0-9;]*m/, ''))
-        puts "Results exported to /data/results_text/#{@date}.txt"
+        File.write(File.expand_path("../data/results/#{@date}/results.txt", __dir__),
+                   output.join("\n").gsub(/\e\[[0-9;]*m/, ''))
+        puts "Results exported to /data/results/#{@date}/results.txt"
       end
 
       def send_results(details, results)
@@ -149,7 +161,7 @@ module Daily
         puts "Response: #{response.code}"
       end
 
-      load_data(file_path)
+      load_data
       render_results
     end
   end
