@@ -16,7 +16,6 @@ module Daily
 
     def run
       date = self.class.instance_variable_get(:@date)
-      target = self.class.instance_variable_get(:@target)
 
       unless File.exist?(File.expand_path("../data/results/#{date}/results.json", __dir__))
         puts
@@ -28,7 +27,7 @@ module Daily
       pastel = Pastel.new
 
       output = capture_stdout do
-        Results.new(date: date, target: target)
+        Results.new(date: date, target: self.class.instance_variable_get(:@target))
       end
 
       file_path = File.expand_path("../data/results/#{date}/results.txt", __dir__)

@@ -15,6 +15,7 @@ module Daily
       env_file_location = File.expand_path('../.env', __dir__)
       prompt = TTY::Prompt.new
       env_data = File.exist?(env_file_location) ? Dotenv.load(env_file_location) : ''
+
       puts
       testers = prompt.ask('What are you\'re testers name (names must be comma separated e.g. name1,name2)? ',
                            value: env_data['TESTERS'].nil? ? '' : env_data['TESTERS']) do |q|
@@ -23,6 +24,7 @@ module Daily
         q.modify :strip
       end
       puts
+
       hpcs = prompt.ask(
         'What\'s the names of the HPC\'s (names must be comma separated e.g. hpc1,hpc2)? ', value: env_data['HPCS'].nil? ? '' : env_data['HPCS']
       ) do |q|

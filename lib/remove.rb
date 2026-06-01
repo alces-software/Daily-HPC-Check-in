@@ -6,12 +6,10 @@ require 'tty-prompt'
 module Daily
   class Remover
     def remove_result(date: nil)
-      prompt = TTY::Prompt.new
-
       date = Date.today.strftime('%d-%m-%Y') if date.nil?
 
-      if prompt.no?("Are you sure you want to remove the result for #{date}? This action cannot be undone.",
-                    default: false)
+      if TTY::Prompt.new.no?("Are you sure you want to remove the result for #{date}? This action cannot be undone.",
+                             default: false)
         puts 'Operation cancelled.'
         return
       end

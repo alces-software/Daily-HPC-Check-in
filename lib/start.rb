@@ -176,8 +176,7 @@ module Daily
       puts
 
       # Writes the data to the file
-      File.write(File.expand_path(results_path, __dir__),
-                 JSON.pretty_generate(results, max_nesting: false))
+      File.write(results_path, JSON.pretty_generate(results))
     end
   end
 end
