@@ -38,13 +38,15 @@ If ruby is installing an older version, reset the module stream with
 
 Run `cd Daily-HPC-Check-in`
 
-and `bundle install`
+And `bundle install`
 
-add daily to the $PATH
+Add daily to the $PATH
 
-add the following to the end of ~/.bashrc: `export PATH="$PATH:~/<PATH_TO_REPO>/bin/`
+Add the following to the end of ~/.bashrc: `export PATH="$PATH:~/<PATH_TO_REPO>/bin/"`
 
-the program can also be run from `<PATH_TO_REPO>/bin/daily`
+And reload the bashrc `source .bashrc`
+
+The program can also be run from `<PATH_TO_REPO>/bin/daily`
 
 ### Instructions for obtaining Google Chat Api Key
 Daily-HPC-Check-in includes a feature that will automatically send the table of results if a FAILURE has occured.
