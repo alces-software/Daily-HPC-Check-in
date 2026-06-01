@@ -24,7 +24,7 @@ module Daily
       end
       puts
       hpcs = prompt.ask(
-        'What\'s the names of the HPC\'s (names must be comma seperated e.g. hpc1,hpc2)? ', value: env_data['HPCS'].nil? ? '' : env_data['HPCS']
+        'What\'s the names of the HPC\'s (names must be comma separated e.g. hpc1,hpc2)? ', value: env_data['HPCS'].nil? ? '' : env_data['HPCS']
       ) do |q|
         q.required true
         q.modify(/^[a-zA-Z,]+$/)
