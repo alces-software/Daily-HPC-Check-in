@@ -3,6 +3,7 @@
 require 'json'
 require 'date'
 require 'tty-prompt'
+
 require_relative 'scheduler'
 
 module Daily
@@ -32,10 +33,6 @@ module Daily
       date = Date.today.strftime('%d-%m-%Y')
       target_hpc = 'cognition'
       results_path = File.expand_path("../data/results/#{date}/results.json", __dir__)
-
-      # Gets all the relevant data for the tests
-      steps = self.class.instance_variable_get(:@step_data)
-      test_template = self.class.instance_variable_get(:@test_template)
 
       # Loads the previous
       results = File.exist?(results_path) ? JSON.parse(File.open(results_path).read) : {}
@@ -72,6 +69,9 @@ module Daily
       results[target_hpc]['tester'] = Daily::Scheduler.new.person
       results[target_hpc]['start-time'] = Time.new.utc
 
+      # Gets the steps data
+      steps = self.class.instance_variable_get(:@step_data)
+
       steps = steps.filter do |step|
         !step['procedures'][target_hpc].nil?
       end
@@ -79,6 +79,9 @@ module Daily
       # Get the amount of steps and. current step
       steps_size = steps.length + 1
       step_position = 1
+
+      # Gets the test template
+      test_template = self.class.instance_variable_get(:@test_template)
 
       # Loops through the steps and displays the data that is in the file for the user
       steps.each do |step|
