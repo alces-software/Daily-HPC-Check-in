@@ -19,6 +19,7 @@ module Daily
       testers = prompt.ask('What are you\'re testers name (names must be comma separated e.g. name1,name2)? ',
                            value: env_data['TESTERS'].nil? ? '' : env_data['TESTERS']) do |q|
         q.required true
+        q.modify(/^[a-zA-Z,]+$/)
         q.modify :strip
       end
       puts
@@ -39,7 +40,6 @@ module Daily
       puts
 
       webhook_key = prompt.ask('What\'s the webhook api key you would like to use?') do |q|
-        q.required true
         q.modify :strip
       end
       puts
