@@ -11,7 +11,7 @@ CLI tool to assist with tasks related to checking clusters
 - `daily edit` starts a wizard to edit the steps
 - `daily who` outputs the person whose turn it is to complete the checklist
 - `daily who new` picks a new person in the event the previous person was unavailable
-- `daily results <date>` outputs the results for the specified date or today's results if no date is specified
+- `daily results <date|target_hpc>` outputs the results for the specified date or a specific HPC if only one value is provided
 - `daily results remove <date>` removes the results for the specified date or today's results if no date is specified
 - `daily results export <date>` exports the results for the specified date or today's results if no date is specified to a txt file
 
@@ -60,4 +60,13 @@ To obtain the webhook api key:
 5) Name webhook and then save
 6) Copy generated api key into `.env` file
 
-
+### ENV file example
+You can setup you're .env file using the daily env command or you can create the file yourself and add the following variables:
+```env
+<!-- Required -->
+TESTERS=name1,name2
+CLUSTERS=cluster1,cluster2
+CLUSTERS_PER_DAY=1
+<!-- Optional -->
+WEBHOOK_API_KEY=key 
+```

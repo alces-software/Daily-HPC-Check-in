@@ -63,16 +63,17 @@ module Daily
     class Results < Dry::CLI::Command
       desc 'Displays test details and results'
 
-      argument :date, required: false, desc: 'Filter results by date (DD-MM-YYYY)'
+      option :date, required: false, aliases: ['-d'], desc: 'Filter results by date (DD-MM-YYYY)'
+      option :target, required: false, aliases: ['-t'], desc: 'Get the results specific to a HPC server'
 
-      def call(date: nil, **)
-        Daily::Results.new(date: date)
+      def call(date: nil, target_hpc: nil, **)
+        Daily::Results.new(date: date, target_hpc: target_hpc)
       end
 
       class Remove < Dry::CLI::Command
         desc 'Removes the result for a specific date'
 
-        argument :date, required: false, desc: 'Date for which to remove results (DD-MM-YYYY)'
+        option :date, required: false, aliases: ['-d'], desc: 'Filter results by date (DD-MM-YYYY)'
 
         def call(date: nil, **)
           Daily::Remover.new.remove_result(date: date)
@@ -82,7 +83,7 @@ module Daily
       class Export < Dry::CLI::Command
         desc 'Creates a text copy of the results.json file'
 
-        argument :date, required: false, desc: 'Date for which to remove results (DD-MM-YYYY)'
+        option :date, required: false, aliases: ['-d'], desc: 'Filter results by date (DD-MM-YYYY)'
 
         def call(date: nil, **)
           Daily::Export.new(date: date)

@@ -9,17 +9,15 @@ require 'tty-prompt'
 require 'net/http'
 require 'uri'
 
-require_relative '../lib/start'
-
 module Daily
   class Results
-    def initialize(date: nil)
+    def initialize(date: nil, target_hpc: nil)
       env = Dotenv.load(File.expand_path('../.env', __dir__))
       @WEBHOOK_URL = env['WEBHOOK_API_KEY']
       @date = date || Date.today.strftime('%d-%m-%Y')
+      @target_hpc = target_hpc
 
       if Dir.exist?(File.expand_path('../data/results', __dir__))
-
         @base_path = File.expand_path('../data/results', __dir__)
         run
       else
@@ -66,11 +64,22 @@ module Daily
         output = []
         failed_results = []
 
-        @data.each_key do |key|
+        if !@target_hpc.nil? && @data[@target_hpc].nil?
+          puts 'The target HPC you requested has no results available for it'
+          return
+        end
+
+        results = @target_hpc.nil? ? @data : { @target_hpc => @data[@target_hpc] }
+
+        if results.nil? || results.empty?
+          puts 'No data can be found'
+          return
+        end
+
+        results.each do |hpc, result|
           failed = false
-          data_key = @data[key]
-          start_time = Time.parse(data_key['start-time'])
-          end_time   = Time.parse(data_key['end-time'])
+          start_time = Time.parse(result['start-time'])
+          end_time   = Time.parse(result['end-time'])
 
           diff = end_time - start_time
 
@@ -81,8 +90,8 @@ module Daily
           pastel = Pastel.new(enabled: $stdout.tty?)
 
           rows = []
-          rows << ['Tester', data_key['tester']]
-          rows << ['HPC', key]
+          rows << ['Tester', result['tester']]
+          rows << ['HPC', result['hpc']]
           rows << ['Date', @date]
           rows << ['Start', start_time.utc.strftime('%H:%M:%S')]
           rows << ['End', end_time.utc.strftime('%H:%M:%S')]
@@ -94,25 +103,25 @@ module Daily
 
           tasks = []
 
-          data_key['results'].each do |result|
-            if result['passed']
+          result['results'].each do |step|
+            if step['passed']
               tasks << [
                 pastel.green('PASS'),
-                pastel.green(result['title']),
-                result['notes']
+                pastel.green(step['title']),
+                step['notes']
               ]
             else
               failed = true
 
               tasks << [
                 pastel.bold.red('FAIL'),
-                pastel.bold.red(result['title']),
-                result['notes']
+                pastel.bold.red(step['title']),
+                step['notes']
               ]
             end
           end
 
-          results_table = Terminal::Table.new title: "#{key} results for #{@date}",
+          results_table = Terminal::Table.new title: "#{hpc} results for #{@date}",
                                               headings: %w[Outcome Task Notes], rows: tasks
 
           output.push(results_table)
@@ -126,7 +135,7 @@ module Daily
 
         export = TTY::Prompt.new.yes?('Export to file?')
 
-        if !failed_results.empty? && Date.strptime(@date, '%d-%m-%Y') == Time.now.utc.to_date
+        if !failed_results.empty? && Date.strptime(@date, '%d-%m-%Y') == Time.now.utc.to_date && !@WEBHOOK_URL.nil?
           failed_results.each do |hpc|
             send_results(hpc[0], hpc[1])
           end

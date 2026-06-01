@@ -6,8 +6,9 @@ require_relative 'results'
 
 module Daily
   class Export
-    def initialize(date: nil)
+    def initialize(date: nil, target: nil)
       self.class.instance_variable_set(:@date, date || Date.today.strftime('%d-%m-%Y'))
+      self.class.instance_variable_set(:@target, target)
       run
     end
 
@@ -15,6 +16,7 @@ module Daily
 
     def run
       date = self.class.instance_variable_get(:@date)
+      target = self.class.instance_variable_get(:@target)
 
       unless File.exist?(File.expand_path("../data/results/#{date}/results.json", __dir__))
         puts
@@ -26,7 +28,7 @@ module Daily
       pastel = Pastel.new
 
       output = capture_stdout do
-        Results.new(date: date)
+        Results.new(date: date, target: target)
       end
 
       file_path = File.expand_path("../data/results/#{date}/results.txt", __dir__)
