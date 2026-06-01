@@ -63,7 +63,7 @@ To obtain the webhook api key:
 6) Copy generated api key into `.env` file
 
 ### ENV file example
-You can setup you're .env file using the daily env command or you can create the file yourself and add the following variables:
+You can setup you're .env file using the `daily env` command or you can create the file yourself and add the following variables:
 ```env
 <!-- Required -->
 TESTERS=name1,name2
